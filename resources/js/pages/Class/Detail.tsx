@@ -22,7 +22,6 @@ interface Props extends PageProps {
         } | null;
     };
     students: Student[];
-    [key: string]: any;
 }
 
 interface StudentOption {
@@ -78,7 +77,7 @@ export default function ClassDetail() {
                     >
                         <option value="">-- Select Student --</option>
                         {allStudents.map((student) => (
-                            <option key={student.id} value={student.id.toString()}>
+                            <option className="bg-card" key={student.id} value={student.id.toString()}>
                                 {student.name}
                             </option>
                         ))}

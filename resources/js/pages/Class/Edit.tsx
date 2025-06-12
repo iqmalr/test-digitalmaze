@@ -12,40 +12,41 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Layers } from 'lucide-react';
 import { useState } from 'react';
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = (className: string): BreadcrumbItem[] => [
     { title: 'Kelas', href: '/classes' },
-    { title: 'Tambah Kelas', href: '/classes/create' },
+    { title: `Edit Kelas ${className}`, href: '#' },
 ];
 
-export default function CreateClass() {
-    const { props } = usePage<PageProps>();
-    const teachers = props.teachers || [];
+export default function EditClass() {
+    const { props } = usePage<PageProps & { class: any; teachers: any[] }>();
+    const { class: classData, teachers } = props;
+
     const [teacherQuery, setTeacherQuery] = useState('');
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        semester: '',
-        academic_year: '',
-        teacher_id: '',
+        name: classData.name || '',
+        semester: classData.semester || '',
+        academic_year: classData.academic_year || '',
+        teacher_id: classData.teacher_id || '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('classes.store'));
+        post(route('classes.update', classData.id));
     };
 
     const hasErrors = Object.keys(errors).length > 0;
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Kelas" />
+        <AppLayout breadcrumbs={breadcrumbs(classData.name)}>
+            <Head title={`Edit Kelas ${classData.name}`} />
             <div className="container mx-auto max-w-4xl p-6">
                 <div className="mb-6 flex items-center justify-between">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <Layers className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Tambah Kelas Baru</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Edit Kelas</h1>
                         </div>
-                        <p className="text-muted-foreground">Masukkan data kelas ke dalam sistem</p>
+                        <p className="text-muted-foreground">Perbarui data kelas pada sistem</p>
                     </div>
                     <Link href="/classes">
                         <Button variant="outline" size="sm">
@@ -70,7 +71,7 @@ export default function CreateClass() {
                             <Layers className="h-5 w-5" />
                             Informasi Kelas
                         </CardTitle>
-                        <CardDescription>Lengkapi informasi kelas untuk data akademik</CardDescription>
+                        <CardDescription>Perbarui informasi kelas untuk data akademik</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -135,7 +136,7 @@ export default function CreateClass() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Simpan Kelas
+                                    Perbarui Kelas
                                 </Button>
                             </div>
                         </form>

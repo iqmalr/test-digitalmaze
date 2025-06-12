@@ -102,4 +102,30 @@ class ClassesController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan siswa ke kelas.');
         }
     }
+    public function edit($id)
+    {
+        $class = Classes::findOrFail($id);
+        $teachers = Teacher::select('id', 'name')->get();
+
+        return Inertia::render('Class/Edit', [
+            'class' => $class,
+            'teachers' => $teachers
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $class = Classes::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'teacher_id' => 'nullable|exists:m_teachers,id',
+            'semester' => 'required|in:1,2',
+            'academic_year' => 'required|string|max:20',
+        ]);
+
+        $class->update($validated);
+
+        return redirect()->route('classes.index')->with('success', 'Kelas berhasil diperbarui.');
+    }
 }
