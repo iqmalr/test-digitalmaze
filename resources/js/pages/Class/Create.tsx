@@ -1,3 +1,4 @@
+import { Combobox } from '@/components/combobox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,45 +6,48 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
+import type { PageProps } from '@/types';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { AlertCircle, ArrowLeft, UserPlus } from 'lucide-react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { AlertCircle, ArrowLeft, Layers } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Teachers', href: '/teachers' },
-    { title: 'Tambah Teacher', href: '/teachers/create' },
+    { title: 'Kelas', href: '/classes' },
+    { title: 'Tambah Kelas', href: '/classes/create' },
 ];
 
-export default function CreateTeacher() {
+export default function CreateClass() {
+    const { props } = usePage<PageProps>();
+    const teachers = props.teachers || [];
+    const [teacherQuery, setTeacherQuery] = useState('');
     const { data, setData, post, processing, errors } = useForm({
         name: '',
-        nip: '',
-        address: '',
-        date_of_birth: '',
+        semester: '',
+        academic_year: '',
+        teacher_id: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('teachers.store'), {
-            forceFormData: true,
-        });
+        post(route('classes.store'));
     };
 
     const hasErrors = Object.keys(errors).length > 0;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Teacher" />
+            <Head title="Tambah Kelas" />
             <div className="container mx-auto max-w-4xl p-6">
                 <div className="mb-6 flex items-center justify-between">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                            <UserPlus className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Tambah Teacher Baru</h1>
+                            <Layers className="h-6 w-6 text-primary" />
+                            <h1 className="text-3xl font-bold tracking-tight">Tambah Kelas Baru</h1>
                         </div>
-                        <p className="text-muted-foreground">Masukkan data teacher ke dalam sistem</p>
+                        <p className="text-muted-foreground">Masukkan data kelas ke dalam sistem</p>
                     </div>
-                    <Link href="/teachers">
+                    <Link href="/classes">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Kembali
@@ -63,69 +67,67 @@ export default function CreateTeacher() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <UserPlus className="h-5 w-5" />
-                            Informasi Teacher
+                            <Layers className="h-5 w-5" />
+                            Informasi Kelas
                         </CardTitle>
-                        <CardDescription>Lengkapi informasi teacher untuk data akademik</CardDescription>
+                        <CardDescription>Lengkapi informasi kelas untuk data akademik</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">
-                                        Nama Lengkap <span className="text-red-500">*</span>
+                                        Nama Kelas <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="name"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Contoh: Budi Santoso"
+                                        placeholder="Contoh: XII IPA 1"
                                         className={errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="nip">
-                                        NIP <span className="text-red-500">*</span>
+                                    <Label htmlFor="semester">
+                                        Semester <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
-                                        id="nip"
-                                        value={data.nip}
-                                        onChange={(e) => setData('nip', e.target.value)}
-                                        placeholder="Contoh: 123456789"
-                                        className={errors.nip ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                                        id="semester"
+                                        value={data.semester}
+                                        onChange={(e) => setData('semester', e.target.value)}
+                                        placeholder="Contoh: 1 / 2"
+                                        className={errors.semester ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
-                                    {errors.nip && <p className="text-xs text-red-500">{errors.nip}</p>}
+                                    {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
                                 </div>
+
                                 <div className="space-y-2">
-                                    <Label htmlFor="date_of_birth">
-                                        Tanggal Lahir <span className="text-red-500">*</span>
+                                    <Label htmlFor="academic_year">
+                                        Tahun Ajaran <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
-                                        id="date_of_birth"
-                                        type="date"
-                                        value={data.date_of_birth}
-                                        onChange={(e) => setData('date_of_birth', e.target.value)}
-                                        className={errors.date_of_birth ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                                        id="academic_year"
+                                        value={data.academic_year}
+                                        onChange={(e) => setData('academic_year', e.target.value)}
+                                        placeholder="Contoh: 2024/2025"
+                                        className={errors.academic_year ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
-                                    {errors.date_of_birth && (
-                                        <p className="flex items-center gap-1 text-xs text-red-500">
-                                            <AlertCircle className="h-3 w-3" />
-                                            {errors.date_of_birth}
-                                        </p>
-                                    )}
+                                    {errors.academic_year && <p className="text-xs text-red-500">{errors.academic_year}</p>}
                                 </div>
+
                                 <div className="space-y-2">
-                                    <Label htmlFor="address">Alamat</Label>
-                                    <textarea
-                                        id="address"
-                                        value={data.address}
-                                        onChange={(e) => setData('address', e.target.value)}
-                                        placeholder="Contoh: Jl. Kenangan No. 45"
-                                        className={`min-h-[100px] w-full rounded-md border px-3 py-2 text-sm ${errors.address ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                                    <Label htmlFor="teacher_id">Wali Kelas</Label>
+                                    <Combobox
+                                        options={teachers.map((t) => ({ label: t.name, value: t.id }))}
+                                        selectedValue={data.teacher_id}
+                                        onInputChange={setTeacherQuery}
+                                        onSelect={(value) => setData('teacher_id', value)}
+                                        inputPlaceholder="Cari nama guru..."
+                                        filterQuery={teacherQuery}
                                     />
-                                    {errors.address && <p className="text-xs text-red-500">{errors.address}</p>}
+                                    {errors.teacher_id && <p className="text-xs text-red-500">{errors.teacher_id}</p>}
                                 </div>
                             </div>
 
@@ -133,7 +135,7 @@ export default function CreateTeacher() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Simpan Teacher
+                                    Simpan Kelas
                                 </Button>
                             </div>
                         </form>

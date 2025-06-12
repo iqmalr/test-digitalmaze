@@ -10,10 +10,10 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Calendar, Hash, MapPin, Save, User } from 'lucide-react';
 
-interface Student {
+interface Teacher {
     id: number;
     name: string;
-    nisn: string;
+    nip: string;
     address: string;
     date_of_birth: string;
     created_at?: string;
@@ -21,37 +21,36 @@ interface Student {
 }
 
 interface Props {
-    student: Student;
+    teacher: Teacher;
 }
 
-export default function EditStudent({ student }: Props) {
+export default function EditTeacher({ teacher }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Siswa',
-            href: '/students',
+            title: 'Teachers',
+            href: '/teachers',
         },
         {
-            title: `Edit - ${student.name}`,
-            href: `/students/${student.id}/edit`,
+            title: `Edit - ${teacher.name}`,
+            href: `/teachers/${teacher.id}/edit`,
         },
     ];
 
     const inertiaForm = useForm({
-        name: student.name || '',
-        nisn: student.nisn || '',
-        address: student.address || '',
-        date_of_birth: student.date_of_birth || '',
+        name: teacher.name || '',
+        nip: teacher.nip || '',
+        address: teacher.address || '',
+        date_of_birth: teacher.date_of_birth || '',
     });
 
     const onSubmit = () => {
-        inertiaForm.post(`/students/${student.id}`, {
+        inertiaForm.post(`/teachers/${teacher.id}`, {
             forceFormData: true,
         });
     };
 
     const hasErrors = Object.keys(inertiaForm.errors).length > 0;
 
-    // Calculate age from date of birth
     const calculateAge = (birthDate: string) => {
         if (!birthDate) return null;
         const today = new Date();
@@ -69,20 +68,20 @@ export default function EditStudent({ student }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Edit ${student.name}`} />
+            <Head title={`Edit ${teacher.name}`} />
 
             <div className="container mx-auto max-w-4xl p-6">
                 <div className="mb-6 flex items-center justify-between">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <User className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Edit Siswa</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Edit Guru</h1>
                         </div>
                         <p className="text-muted-foreground">
-                            Perbarui informasi siswa <span className="font-medium">{student.name}</span>
+                            Perbarui informasi Guru <span className="font-medium">{teacher.name}</span>
                         </p>
                     </div>
-                    <Link href="/students">
+                    <Link href="/teachers">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Kembali
@@ -105,9 +104,9 @@ export default function EditStudent({ student }: Props) {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <User className="h-5 w-5" />
-                                    Informasi Siswa
+                                    Informasi Guru
                                 </CardTitle>
-                                <CardDescription>Edit detail data siswa</CardDescription>
+                                <CardDescription>Edit detail data Guru</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-6">
@@ -118,7 +117,7 @@ export default function EditStudent({ student }: Props) {
                                             </Label>
                                             <Input
                                                 id="name"
-                                                placeholder="Masukkan nama lengkap siswa"
+                                                placeholder="Masukkan nama lengkap Guru"
                                                 value={inertiaForm.data.name}
                                                 onChange={(e) => inertiaForm.setData('name', e.target.value)}
                                                 className={inertiaForm.errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}
@@ -132,20 +131,20 @@ export default function EditStudent({ student }: Props) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="nisn">
+                                            <Label htmlFor="nip">
                                                 NISN <span className="text-red-500">*</span>
                                             </Label>
                                             <Input
-                                                id="nisn"
-                                                placeholder="Masukkan NISN siswa"
-                                                value={inertiaForm.data.nisn}
-                                                onChange={(e) => inertiaForm.setData('nisn', e.target.value)}
-                                                className={inertiaForm.errors.nisn ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                                                id="nip"
+                                                placeholder="Masukkan NISN Guru"
+                                                value={inertiaForm.data.nip}
+                                                onChange={(e) => inertiaForm.setData('nip', e.target.value)}
+                                                className={inertiaForm.errors.nip ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                             />
-                                            {inertiaForm.errors.nisn && (
+                                            {inertiaForm.errors.nip && (
                                                 <p className="flex items-center gap-1 text-xs text-red-500">
                                                     <AlertCircle className="h-3 w-3" />
-                                                    {inertiaForm.errors.nisn}
+                                                    {inertiaForm.errors.nip}
                                                 </p>
                                             )}
                                         </div>
@@ -180,7 +179,7 @@ export default function EditStudent({ student }: Props) {
                                                 id="address"
                                                 value={inertiaForm.data.address}
                                                 onChange={(e) => inertiaForm.setData('address', e.target.value)}
-                                                placeholder="Masukkan alamat lengkap siswa"
+                                                placeholder="Masukkan alamat lengkap Guru"
                                                 className={`min-h-[100px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none ${inertiaForm.errors.address ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                                             />
                                             {inertiaForm.errors.address && (
@@ -208,7 +207,7 @@ export default function EditStudent({ student }: Props) {
                                                 </>
                                             )}
                                         </Button>
-                                        <Link href="/students">
+                                        <Link href="/teachers">
                                             <Button variant="outline" size="lg">
                                                 Batal
                                             </Button>
@@ -241,7 +240,7 @@ export default function EditStudent({ student }: Props) {
                                         <Hash className="h-4 w-4 text-muted-foreground" />
                                         <div className="min-w-0 flex-1">
                                             <p className="text-xs text-muted-foreground">NISN</p>
-                                            <p className="text-sm font-medium">{inertiaForm.data.nisn || 'Belum diisi'}</p>
+                                            <p className="text-sm font-medium">{inertiaForm.data.nip || 'Belum diisi'}</p>
                                         </div>
                                     </div>
 
@@ -281,30 +280,30 @@ export default function EditStudent({ student }: Props) {
                                 <div className="rounded-lg bg-muted p-3">
                                     <p className="mb-2 text-xs text-muted-foreground">Status Edit</p>
                                     <div className="space-y-1">
-                                        {inertiaForm.data.name !== student.name && (
+                                        {inertiaForm.data.name !== teacher.name && (
                                             <Badge variant="outline" className="text-xs">
                                                 Nama diubah
                                             </Badge>
                                         )}
-                                        {inertiaForm.data.nisn !== student.nisn && (
+                                        {inertiaForm.data.nip !== teacher.nip && (
                                             <Badge variant="outline" className="text-xs">
                                                 NISN diubah
                                             </Badge>
                                         )}
-                                        {inertiaForm.data.date_of_birth !== student.date_of_birth && (
+                                        {inertiaForm.data.date_of_birth !== teacher.date_of_birth && (
                                             <Badge variant="outline" className="text-xs">
                                                 Tanggal lahir diubah
                                             </Badge>
                                         )}
-                                        {inertiaForm.data.address !== student.address && (
+                                        {inertiaForm.data.address !== teacher.address && (
                                             <Badge variant="outline" className="text-xs">
                                                 Alamat diubah
                                             </Badge>
                                         )}
-                                        {inertiaForm.data.name === student.name &&
-                                            inertiaForm.data.nisn === student.nisn &&
-                                            inertiaForm.data.date_of_birth === student.date_of_birth &&
-                                            inertiaForm.data.address === student.address && (
+                                        {inertiaForm.data.name === teacher.name &&
+                                            inertiaForm.data.nip === teacher.nip &&
+                                            inertiaForm.data.date_of_birth === teacher.date_of_birth &&
+                                            inertiaForm.data.address === teacher.address && (
                                                 <Badge variant="secondary" className="text-xs">
                                                     Tidak ada perubahan
                                                 </Badge>
@@ -312,15 +311,15 @@ export default function EditStudent({ student }: Props) {
                                     </div>
                                 </div>
 
-                                {student.created_at && (
+                                {teacher.created_at && (
                                     <>
                                         <Separator />
                                         <div className="space-y-2">
                                             <p className="text-xs font-medium text-muted-foreground">Info Tambahan</p>
                                             <div className="space-y-1 text-xs text-muted-foreground">
-                                                <p>Dibuat: {new Date(student.created_at).toLocaleDateString('id-ID')}</p>
-                                                {student.updated_at && (
-                                                    <p>Terakhir diubah: {new Date(student.updated_at).toLocaleDateString('id-ID')}</p>
+                                                <p>Dibuat: {new Date(teacher.created_at).toLocaleDateString('id-ID')}</p>
+                                                {teacher.updated_at && (
+                                                    <p>Terakhir diubah: {new Date(teacher.updated_at).toLocaleDateString('id-ID')}</p>
                                                 )}
                                             </div>
                                         </div>

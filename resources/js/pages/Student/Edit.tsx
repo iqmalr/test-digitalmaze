@@ -51,7 +51,6 @@ export default function EditStudent({ student }: Props) {
 
     const hasErrors = Object.keys(inertiaForm.errors).length > 0;
 
-    // Calculate age from date of birth
     const calculateAge = (birthDate: string) => {
         if (!birthDate) return null;
         const today = new Date();

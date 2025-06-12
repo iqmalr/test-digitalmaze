@@ -1,4 +1,3 @@
-import AlertDialogDelete from '@/components/alert-dialog-delete';
 import HeadingSmall from '@/components/heading-small';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -8,23 +7,29 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Search, Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Teachers',
-        href: '/teachers',
+        title: 'Class',
+        href: '/classes',
     },
 ];
 
-export interface Teacher {
+interface ClassItem {
     id: string;
     name: string;
-    nip?: string;
-    date_of_birth: string;
-    address: string;
+    teacher?: {
+        id: string;
+        name: string;
+    } | null;
+    capacity: number;
+    description?: string;
+    academic_year: string;
+    semester: number;
 }
 
 interface PaginationLink {
@@ -33,8 +38,8 @@ interface PaginationLink {
     active: boolean;
 }
 
-interface PaginatedTeachers {
-    data: Teacher[];
+interface PaginatedClasses {
+    data: ClassItem[];
     current_page: number;
     last_page: number;
     per_page: number;
@@ -48,7 +53,7 @@ interface PageProps {
     flash?: {
         message?: string;
     };
-    teachers: PaginatedTeachers;
+    classes: PaginatedClasses;
     filters: {
         search: string;
         per_page: number;
@@ -56,31 +61,27 @@ interface PageProps {
 }
 
 export default function Index() {
-    const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [perPage, setPerPage] = useState(10);
-    const { teachers, flash, filters } = usePage().props as unknown as PageProps;
-    const { processing, delete: destroy } = useForm();
+    const { classes, flash, filters } = usePage().props as unknown as PageProps;
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (teachers) {
-            const timer = setTimeout(() => {
-                setIsLoading(false);
-            }, 1000);
+        if (classes) {
+            const timer = setTimeout(() => setIsLoading(false), 1000);
             return () => clearTimeout(timer);
         }
-    }, [teachers]);
+    }, [classes]);
 
     useEffect(() => {
-        setSearchTerm(filters.search);
-        setPerPage(filters.per_page);
+        setSearchTerm(filters.search ?? '');
+        setPerPage(filters.per_page ?? 10);
     }, [filters]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         router.get(
-            route('teachers.index'),
+            route('classes.index'),
             {
                 search: searchTerm,
                 per_page: perPage,
@@ -96,7 +97,7 @@ export default function Index() {
         const newPerPage = parseInt(value);
         setPerPage(newPerPage);
         router.get(
-            route('teachers.index'),
+            route('classes.index'),
             {
                 search: searchTerm,
                 per_page: newPerPage,
@@ -107,14 +108,6 @@ export default function Index() {
             },
         );
     };
-
-    const handleDelete = () => {
-        if (selectedTeacher) {
-            destroy(route('teachers.destroy', selectedTeacher.id));
-            setSelectedTeacher(null);
-        }
-    };
-
     const handlePageChange = (url: string) => {
         router.visit(url, {
             preserveState: true,
@@ -128,69 +121,61 @@ export default function Index() {
                 <TableCell>
                     <Skeleton className="h-5 w-8" />
                 </TableCell>
-                <TableCell className="w-[180px]">
-                    <Skeleton className="h-5 w-[160px]" />
-                </TableCell>
-                <TableCell className="w-[120px]">
-                    <Skeleton className="h-5 w-[100px]" />
-                </TableCell>
-                <TableCell className="w-[140px]">
-                    <Skeleton className="h-5 w-[120px]" />
-                </TableCell>
-                <TableCell className="w-[200px]">
-                    <Skeleton className="h-5 w-[180px]" />
+                <TableCell>
+                    <Skeleton className="h-5 w-24" />
                 </TableCell>
                 <TableCell>
-                    <div className="flex justify-center gap-2">
-                        <Skeleton className="h-9 w-[64px]" />
-                        <Skeleton className="h-9 w-[76px]" />
-                    </div>
+                    <Skeleton className="h-5 w-32" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-5 w-12" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-5 w-48" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-9 w-20" />
                 </TableCell>
             </TableRow>
         ));
     };
 
     const renderPagination = () => {
-        if (teachers.last_page <= 1) return null;
+        if (classes.last_page <= 1) return null;
 
         return (
             <div className="flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">
-                    Showing {teachers.from} to {teachers.to} of {teachers.total} results
+                    Showing {classes.from} to {classes.to} of {classes.total} results
                 </div>
                 <div className="flex items-center gap-2">
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => teachers.links[0].url && handlePageChange(teachers.links[0].url)}
-                        disabled={teachers.current_page === 1}
+                        onClick={() => classes.links[0].url && handlePageChange(classes.links[0].url)}
+                        disabled={classes.current_page === 1}
                     >
                         <ChevronLeft className="h-4 w-4" />
                         Previous
                     </Button>
-
                     <div className="flex items-center gap-1">
-                        {teachers.links.slice(1, -1).map((link, index) => (
+                        {classes.links.slice(1, -1).map((link, i) => (
                             <Button
-                                key={index}
+                                key={i}
                                 variant={link.active ? 'secondary' : 'outline'}
                                 size="sm"
                                 onClick={() => link.url && handlePageChange(link.url)}
-                                disabled={!link.url}
                                 className="min-w-[40px]"
                             >
                                 {link.label}
                             </Button>
                         ))}
                     </div>
-
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                            teachers.links[teachers.links.length - 1].url && handlePageChange(teachers.links[teachers.links.length - 1].url)
-                        }
-                        disabled={teachers.current_page === teachers.last_page}
+                        onClick={() => classes.links.at(-1)?.url && handlePageChange(classes.links.at(-1)!.url)}
+                        disabled={classes.current_page === classes.last_page}
                     >
                         Next
                         <ChevronRight className="h-4 w-4" />
@@ -202,24 +187,22 @@ export default function Index() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Teacher" />
-
             <div className="space-y-6 px-4 py-6">
-                <HeadingSmall title="Teacher" description="Manage and view your created Teacher" />
+                <HeadingSmall title="Class" description="Manage and view available classes" />
 
                 <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-medium">Teacher List</h2>
-                    <Link href={route('teachers.create')}>
-                        <Button>Add Teacher</Button>
+                    <h2 className="text-lg font-medium">Class List</h2>
+                    <Link href={route('classes.create')}>
+                        <Button>Add Class</Button>
                     </Link>
                 </div>
 
                 <div className="flex items-center gap-4 rounded-lg bg-muted/30 p-4">
-                    <form onSubmit={handleSearch} className="flex flex-1 items-center gap-2">
+                    <form onSubmit={handleSearch} className="flex flex-1 gap-2">
                         <div className="relative max-w-sm flex-1">
-                            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+                            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
-                                placeholder="Search by name, NIP, or address..."
+                                placeholder="Search by name or teacher..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10"
@@ -232,7 +215,7 @@ export default function Index() {
 
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground">Show:</span>
-                        <Select value={perPage.toString()} onValueChange={handlePerPageChange}>
+                        <Select value={perPage?.toString() ?? '10'} onValueChange={handlePerPageChange}>
                             <SelectTrigger className="w-20">
                                 <SelectValue />
                             </SelectTrigger>
@@ -247,7 +230,7 @@ export default function Index() {
                 </div>
 
                 {flash?.message && (
-                    <Alert variant="default" className="border-l-4 bg-muted/50">
+                    <Alert className="border-l-4 bg-muted/50">
                         <Terminal className="h-5 w-5" />
                         <div>
                             <AlertTitle>Notification</AlertTitle>
@@ -256,10 +239,10 @@ export default function Index() {
                     </Alert>
                 )}
 
-                {!isLoading && teachers.data.length === 0 ? (
+                {!isLoading && classes.data.length === 0 ? (
                     <div className="py-8 text-center">
                         <div className="text-sm text-muted-foreground italic">
-                            {filters.search ? `No teachers found matching "${filters.search}"` : 'No teachers available.'}
+                            {filters.search ? `No classes found for "${filters.search}"` : 'No classes available.'}
                         </div>
                         {filters.search && (
                             <Button
@@ -268,7 +251,7 @@ export default function Index() {
                                 className="mt-2"
                                 onClick={() => {
                                     setSearchTerm('');
-                                    router.get(route('teachers.index'), { per_page: perPage });
+                                    router.get(route('classes.index'), { per_page: perPage });
                                 }}
                             >
                                 Clear Search
@@ -280,48 +263,33 @@ export default function Index() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[40px]">#</TableHead>
-                                    <TableHead className="w-[180px]">Name</TableHead>
-                                    <TableHead className="w-[120px]">NIP</TableHead>
-                                    <TableHead className="w-[140px]">Date of Birth</TableHead>
-                                    <TableHead className="w-[200px]">Address</TableHead>
-                                    <TableHead className="text-center">Action</TableHead>
+                                    <TableHead>#</TableHead>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Homeroom Teacher</TableHead>
+                                    <TableHead>Capacity</TableHead>
+                                    <TableHead>Academic Year</TableHead>
+                                    <TableHead className="text-center">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {isLoading
                                     ? renderSkeletonRows()
-                                    : teachers.data.map((teacher: Teacher, index: number) => (
-                                          <TableRow key={teacher.id}>
-                                              <TableCell>{(teachers.current_page - 1) * teachers.per_page + index + 1}</TableCell>
-                                              <TableCell className="font-medium">{teacher.name}</TableCell>
-                                              <TableCell>{teacher.nip || '-'}</TableCell>
-                                              <TableCell>{teacher.date_of_birth}</TableCell>
-                                              <TableCell className="max-w-[200px] truncate" title={teacher.address}>
-                                                  {teacher.address}
+                                    : classes.data.map((cls, i) => (
+                                          <TableRow key={cls.id}>
+                                              <TableCell>{(classes.current_page - 1) * classes.per_page + i + 1}</TableCell>
+                                              <TableCell>{cls.name}</TableCell>
+                                              <TableCell>{cls.teacher?.name ?? '-'}</TableCell>
+                                              <TableCell>{cls.capacity}</TableCell>
+                                              <TableCell className="max-w-[180px] truncate">
+                                                  {cls.academic_year}-Semester {cls.semester}
                                               </TableCell>
                                               <TableCell className="text-center">
                                                   <div className="flex justify-center gap-2">
-                                                      <Link href={`/teachers/${teacher.id}/edit`}>
+                                                      <Link href={`/classes/${cls.id}/detail`}>
                                                           <Button variant="update" size="sm">
-                                                              Edit
+                                                              Detail
                                                           </Button>
                                                       </Link>
-                                                      <AlertDialogDelete
-                                                          title="Are you sure?"
-                                                          description={`This will permanently delete the teacher "${teacher.name}".`}
-                                                          onConfirm={handleDelete}
-                                                          loading={processing}
-                                                      >
-                                                          <Button
-                                                              variant="destructive"
-                                                              size="sm"
-                                                              onClick={() => setSelectedTeacher(teacher)}
-                                                              disabled={processing}
-                                                          >
-                                                              Delete
-                                                          </Button>
-                                                      </AlertDialogDelete>
                                                   </div>
                                               </TableCell>
                                           </TableRow>
