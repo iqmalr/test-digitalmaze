@@ -44,14 +44,14 @@ export default function EditClass() {
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <Layers className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Edit Kelas</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Edit Classroom</h1>
                         </div>
-                        <p className="text-muted-foreground">Perbarui data kelas pada sistem</p>
+                        <p className="text-muted-foreground">Update classroom data</p>
                     </div>
                     <Link href="/classes">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Kembali
+                            Back
                         </Button>
                     </Link>
                 </div>
@@ -61,7 +61,7 @@ export default function EditClass() {
                 {hasErrors && (
                     <Alert variant="destructive" className="mb-6">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>Terdapat kesalahan pada form. Silakan periksa kembali data yang dimasukkan.</AlertDescription>
+                        <AlertDescription>There is an error in the form. Please double check the data entered.</AlertDescription>
                     </Alert>
                 )}
 
@@ -69,9 +69,9 @@ export default function EditClass() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Layers className="h-5 w-5" />
-                            Informasi Kelas
+                            Kelas Information
                         </CardTitle>
-                        <CardDescription>Perbarui informasi kelas untuk data akademik</CardDescription>
+                        <CardDescription>Update class information for academic data</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -106,7 +106,7 @@ export default function EditClass() {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="academic_year">
-                                        Tahun Ajaran <span className="text-red-500">*</span>
+                                        Academic Year <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="academic_year"
@@ -119,7 +119,7 @@ export default function EditClass() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="teacher_id">Wali Kelas</Label>
+                                    <Label htmlFor="teacher_id">Homeroom Teacher</Label>
                                     <Combobox
                                         options={teachers.map((t) => ({ label: t.name, value: t.id }))}
                                         selectedValue={data.teacher_id}
@@ -136,7 +136,7 @@ export default function EditClass() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Perbarui Kelas
+                                    Update Kelas
                                 </Button>
                             </div>
                         </form>

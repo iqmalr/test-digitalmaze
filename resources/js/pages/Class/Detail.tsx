@@ -9,7 +9,6 @@ interface Student {
     id: number;
     name: string;
     nisn: string;
-    gender: string;
 }
 
 interface Props extends PageProps {
@@ -102,7 +101,6 @@ export default function ClassDetail() {
                                 <TableHead>#</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>NISN</TableHead>
-                                <TableHead>Gender</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -118,7 +116,6 @@ export default function ClassDetail() {
                                         <TableCell>{i + 1}</TableCell>
                                         <TableCell>{student.name}</TableCell>
                                         <TableCell>{student.nisn}</TableCell>
-                                        <TableCell>{student.gender}</TableCell>
                                     </TableRow>
                                 ))
                             )}

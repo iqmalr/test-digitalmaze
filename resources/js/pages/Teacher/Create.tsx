@@ -41,12 +41,12 @@ export default function CreateTeacher() {
                             <UserPlus className="h-6 w-6 text-primary" />
                             <h1 className="text-3xl font-bold tracking-tight">Tambah Teacher Baru</h1>
                         </div>
-                        <p className="text-muted-foreground">Masukkan data teacher ke dalam sistem</p>
+                        <p className="text-muted-foreground">Enter teacher data into system</p>
                     </div>
                     <Link href="/teachers">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Kembali
+                            Back
                         </Button>
                     </Link>
                 </div>
@@ -56,7 +56,7 @@ export default function CreateTeacher() {
                 {hasErrors && (
                     <Alert variant="destructive" className="mb-6">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>Terdapat kesalahan pada form. Silakan periksa kembali data yang dimasukkan.</AlertDescription>
+                        <AlertDescription>There is an error in the form. Please double check the data entered.</AlertDescription>
                     </Alert>
                 )}
 
@@ -64,22 +64,22 @@ export default function CreateTeacher() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <UserPlus className="h-5 w-5" />
-                            Informasi Teacher
+                            Teacher Information
                         </CardTitle>
-                        <CardDescription>Lengkapi informasi teacher untuk data akademik</CardDescription>
+                        <CardDescription>Complete teacher information for academic data</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">
-                                        Nama Lengkap <span className="text-red-500">*</span>
+                                        Full Name <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="name"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Contoh: Budi Santoso"
+                                        placeholder="Example: Budi Santoso"
                                         className={errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
@@ -93,14 +93,14 @@ export default function CreateTeacher() {
                                         id="nip"
                                         value={data.nip}
                                         onChange={(e) => setData('nip', e.target.value)}
-                                        placeholder="Contoh: 123456789"
+                                        placeholder="Example: 123456789"
                                         className={errors.nip ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.nip && <p className="text-xs text-red-500">{errors.nip}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="date_of_birth">
-                                        Tanggal Lahir <span className="text-red-500">*</span>
+                                        Date of Birth<span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="date_of_birth"
@@ -117,12 +117,12 @@ export default function CreateTeacher() {
                                     )}
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="address">Alamat</Label>
+                                    <Label htmlFor="address">Address</Label>
                                     <textarea
                                         id="address"
                                         value={data.address}
                                         onChange={(e) => setData('address', e.target.value)}
-                                        placeholder="Contoh: Jl. Kenangan No. 45"
+                                        placeholder="Example: Jl. Kenangan No. 45"
                                         className={`min-h-[100px] w-full rounded-md border px-3 py-2 text-sm ${errors.address ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                                     />
                                     {errors.address && <p className="text-xs text-red-500">{errors.address}</p>}
@@ -133,7 +133,7 @@ export default function CreateTeacher() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Simpan Teacher
+                                    Save Teacher
                                 </Button>
                             </div>
                         </form>

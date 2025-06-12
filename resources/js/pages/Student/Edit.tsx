@@ -27,7 +27,7 @@ interface Props {
 export default function EditStudent({ student }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Siswa',
+            title: 'Student',
             href: '/students',
         },
         {
@@ -75,16 +75,16 @@ export default function EditStudent({ student }: Props) {
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <User className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Edit Siswa</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Edit Student</h1>
                         </div>
                         <p className="text-muted-foreground">
-                            Perbarui informasi siswa <span className="font-medium">{student.name}</span>
+                            Update student information <span className="font-medium">{student.name}</span>
                         </p>
                     </div>
                     <Link href="/students">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Kembali
+                            Back
                         </Button>
                     </Link>
                 </div>
@@ -94,7 +94,7 @@ export default function EditStudent({ student }: Props) {
                 {hasErrors && (
                     <Alert variant="destructive" className="mb-6">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>Terdapat kesalahan pada form. Silakan periksa kembali data yang dimasukkan.</AlertDescription>
+                        <AlertDescription>There is an error in the form. Please double check the data entered.</AlertDescription>
                     </Alert>
                 )}
 
@@ -104,20 +104,20 @@ export default function EditStudent({ student }: Props) {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <User className="h-5 w-5" />
-                                    Informasi Siswa
+                                    Student Information
                                 </CardTitle>
-                                <CardDescription>Edit detail data siswa</CardDescription>
+                                <CardDescription>Edit student data details</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-6">
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="name">
-                                                Nama Lengkap <span className="text-red-500">*</span>
+                                                Full Name <span className="text-red-500">*</span>
                                             </Label>
                                             <Input
                                                 id="name"
-                                                placeholder="Masukkan nama lengkap siswa"
+                                                placeholder="Enter the student's full name"
                                                 value={inertiaForm.data.name}
                                                 onChange={(e) => inertiaForm.setData('name', e.target.value)}
                                                 className={inertiaForm.errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}
@@ -151,7 +151,7 @@ export default function EditStudent({ student }: Props) {
 
                                         <div className="space-y-2">
                                             <Label htmlFor="date_of_birth">
-                                                Tanggal Lahir <span className="text-red-500">*</span>
+                                                Date of Birth <span className="text-red-500">*</span>
                                             </Label>
                                             <Input
                                                 id="date_of_birth"
@@ -166,14 +166,12 @@ export default function EditStudent({ student }: Props) {
                                                     {inertiaForm.errors.date_of_birth}
                                                 </p>
                                             )}
-                                            {currentAge !== null && (
-                                                <p className="text-xs text-muted-foreground">Usia saat ini: {currentAge} tahun</p>
-                                            )}
+                                            {currentAge !== null && <p className="text-xs text-muted-foreground">Current age: {currentAge} YO</p>}
                                         </div>
 
                                         <div className="space-y-2">
                                             <Label htmlFor="address">
-                                                Alamat <span className="text-red-500">*</span>
+                                                Address <span className="text-red-500">*</span>
                                             </Label>
                                             <textarea
                                                 id="address"
@@ -198,18 +196,18 @@ export default function EditStudent({ student }: Props) {
                                             {inertiaForm.processing ? (
                                                 <>
                                                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white" />
-                                                    Menyimpan...
+                                                    Saving...
                                                 </>
                                             ) : (
                                                 <>
                                                     <Save className="mr-2 h-4 w-4" />
-                                                    Simpan Perubahan
+                                                    Save
                                                 </>
                                             )}
                                         </Button>
                                         <Link href="/students">
                                             <Button variant="outline" size="lg">
-                                                Batal
+                                                Cancel
                                             </Button>
                                         </Link>
                                     </div>
@@ -223,7 +221,7 @@ export default function EditStudent({ student }: Props) {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <User className="h-5 w-5" />
-                                    Ringkasan Data
+                                    Data Summary
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -231,8 +229,8 @@ export default function EditStudent({ student }: Props) {
                                     <div className="flex items-center gap-2 rounded-lg border p-3">
                                         <User className="h-4 w-4 text-muted-foreground" />
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-xs text-muted-foreground">Nama</p>
-                                            <p className="truncate text-sm font-medium">{inertiaForm.data.name || 'Belum diisi'}</p>
+                                            <p className="text-xs text-muted-foreground">Name</p>
+                                            <p className="truncate text-sm font-medium">{inertiaForm.data.name || 'Not yet filled'}</p>
                                         </div>
                                     </div>
 
@@ -240,7 +238,7 @@ export default function EditStudent({ student }: Props) {
                                         <Hash className="h-4 w-4 text-muted-foreground" />
                                         <div className="min-w-0 flex-1">
                                             <p className="text-xs text-muted-foreground">NISN</p>
-                                            <p className="text-sm font-medium">{inertiaForm.data.nisn || 'Belum diisi'}</p>
+                                            <p className="text-sm font-medium">{inertiaForm.data.nisn || 'Not yet filled'}</p>
                                         </div>
                                     </div>
 
@@ -256,11 +254,11 @@ export default function EditStudent({ student }: Props) {
                                                           month: 'long',
                                                           day: 'numeric',
                                                       })
-                                                    : 'Belum diisi'}
+                                                    : 'Not yet filled'}
                                             </p>
                                             {currentAge !== null && (
                                                 <Badge variant="secondary" className="mt-1 text-xs">
-                                                    {currentAge} tahun
+                                                    {currentAge} yo
                                                 </Badge>
                                             )}
                                         </div>
@@ -269,8 +267,8 @@ export default function EditStudent({ student }: Props) {
                                     <div className="flex items-start gap-2 rounded-lg border p-3">
                                         <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-xs text-muted-foreground">Alamat</p>
-                                            <p className="text-sm font-medium">{inertiaForm.data.address || 'Belum diisi'}</p>
+                                            <p className="text-xs text-muted-foreground">Address</p>
+                                            <p className="text-sm font-medium">{inertiaForm.data.address || 'Not yet filled'}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -282,22 +280,22 @@ export default function EditStudent({ student }: Props) {
                                     <div className="space-y-1">
                                         {inertiaForm.data.name !== student.name && (
                                             <Badge variant="outline" className="text-xs">
-                                                Nama diubah
+                                                Name Changed
                                             </Badge>
                                         )}
                                         {inertiaForm.data.nisn !== student.nisn && (
                                             <Badge variant="outline" className="text-xs">
-                                                NISN diubah
+                                                NISN Changed
                                             </Badge>
                                         )}
                                         {inertiaForm.data.date_of_birth !== student.date_of_birth && (
                                             <Badge variant="outline" className="text-xs">
-                                                Tanggal lahir diubah
+                                                Date of Birth Changed
                                             </Badge>
                                         )}
                                         {inertiaForm.data.address !== student.address && (
                                             <Badge variant="outline" className="text-xs">
-                                                Alamat diubah
+                                                Address Changed
                                             </Badge>
                                         )}
                                         {inertiaForm.data.name === student.name &&
@@ -305,7 +303,7 @@ export default function EditStudent({ student }: Props) {
                                             inertiaForm.data.date_of_birth === student.date_of_birth &&
                                             inertiaForm.data.address === student.address && (
                                                 <Badge variant="secondary" className="text-xs">
-                                                    Tidak ada perubahan
+                                                    No Changes
                                                 </Badge>
                                             )}
                                     </div>
@@ -315,11 +313,11 @@ export default function EditStudent({ student }: Props) {
                                     <>
                                         <Separator />
                                         <div className="space-y-2">
-                                            <p className="text-xs font-medium text-muted-foreground">Info Tambahan</p>
+                                            <p className="text-xs font-medium text-muted-foreground">Additional Information</p>
                                             <div className="space-y-1 text-xs text-muted-foreground">
-                                                <p>Dibuat: {new Date(student.created_at).toLocaleDateString('id-ID')}</p>
+                                                <p>Created: {new Date(student.created_at).toLocaleDateString('id-ID')}</p>
                                                 {student.updated_at && (
-                                                    <p>Terakhir diubah: {new Date(student.updated_at).toLocaleDateString('id-ID')}</p>
+                                                    <p>Last modified: {new Date(student.updated_at).toLocaleDateString('id-ID')}</p>
                                                 )}
                                             </div>
                                         </div>

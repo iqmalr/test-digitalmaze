@@ -43,14 +43,14 @@ export default function CreateClass() {
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <Layers className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Tambah Kelas Baru</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Add New Class</h1>
                         </div>
-                        <p className="text-muted-foreground">Masukkan data kelas ke dalam sistem</p>
+                        <p className="text-muted-foreground">Insert classroom data</p>
                     </div>
                     <Link href="/classes">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Kembali
+                            Back
                         </Button>
                     </Link>
                 </div>
@@ -60,7 +60,7 @@ export default function CreateClass() {
                 {hasErrors && (
                     <Alert variant="destructive" className="mb-6">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>Terdapat kesalahan pada form. Silakan periksa kembali data yang dimasukkan.</AlertDescription>
+                        <AlertDescription>There is an error in the form. Please double check the data entered.</AlertDescription>
                     </Alert>
                 )}
 
@@ -68,22 +68,22 @@ export default function CreateClass() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Layers className="h-5 w-5" />
-                            Informasi Kelas
+                            Classroom Information
                         </CardTitle>
-                        <CardDescription>Lengkapi informasi kelas untuk data akademik</CardDescription>
+                        <CardDescription>Complete class information for academic data</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">
-                                        Nama Kelas <span className="text-red-500">*</span>
+                                        Classroom Name <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="name"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Contoh: XII IPA 1"
+                                        placeholder="Example: VI A"
                                         className={errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
@@ -91,13 +91,13 @@ export default function CreateClass() {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="semester">
-                                        Semester <span className="text-red-500">*</span>
+                                        Semesters <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="semester"
                                         value={data.semester}
                                         onChange={(e) => setData('semester', e.target.value)}
-                                        placeholder="Contoh: 1 / 2"
+                                        placeholder="Example: 1 / 2"
                                         className={errors.semester ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
@@ -105,7 +105,7 @@ export default function CreateClass() {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="academic_year">
-                                        Tahun Ajaran <span className="text-red-500">*</span>
+                                        Academic Year <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="academic_year"
@@ -118,13 +118,13 @@ export default function CreateClass() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="teacher_id">Wali Kelas</Label>
+                                    <Label htmlFor="teacher_id">Homeroom Teacher</Label>
                                     <Combobox
                                         options={teachers.map((t) => ({ label: t.name, value: t.id }))}
                                         selectedValue={data.teacher_id}
                                         onInputChange={setTeacherQuery}
                                         onSelect={(value) => setData('teacher_id', value)}
-                                        inputPlaceholder="Cari nama guru..."
+                                        inputPlaceholder="Search teacher..."
                                         filterQuery={teacherQuery}
                                     />
                                     {errors.teacher_id && <p className="text-xs text-red-500">{errors.teacher_id}</p>}
@@ -135,7 +135,7 @@ export default function CreateClass() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Simpan Kelas
+                                    Save Kelas
                                 </Button>
                             </div>
                         </form>
