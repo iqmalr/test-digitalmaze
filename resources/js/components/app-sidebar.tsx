@@ -18,6 +18,11 @@ const mainNavItems: NavItem[] = [
         href: '/students',
         icon: LayoutGrid,
     },
+    {
+        title: 'Teacher',
+        href: '/teachers',
+        icon: LayoutGrid,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

@@ -13,7 +13,7 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             Student::create([
                 'nisn' => fake()->unique()->numerify('############'),
                 'name' => fake()->name(),
