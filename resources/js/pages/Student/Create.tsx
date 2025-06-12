@@ -10,8 +10,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, UserPlus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Siswa', href: '/students' },
-    { title: 'Tambah Siswa', href: '/students/create' },
+    { title: 'Student', href: '/students' },
+    { title: 'Add Student', href: '/students/create' },
 ];
 
 export default function CreateStudent() {
@@ -56,14 +56,14 @@ export default function CreateStudent() {
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <UserPlus className="h-6 w-6 text-primary" />
-                            <h1 className="text-3xl font-bold tracking-tight">Tambah Siswa Baru</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Add New Student</h1>
                         </div>
-                        <p className="text-muted-foreground">Masukkan data siswa ke dalam sistem</p>
+                        <p className="text-muted-foreground">Enter student data into the system</p>
                     </div>
                     <Link href="/students">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Kembali
+                            Back
                         </Button>
                     </Link>
                 </div>
@@ -73,7 +73,7 @@ export default function CreateStudent() {
                 {hasErrors && (
                     <Alert variant="destructive" className="mb-6">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>Terdapat kesalahan pada form. Silakan periksa kembali data yang dimasukkan.</AlertDescription>
+                        <AlertDescription>There is an error in the form. Please double check the data entered.</AlertDescription>
                     </Alert>
                 )}
 
@@ -81,16 +81,16 @@ export default function CreateStudent() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <UserPlus className="h-5 w-5" />
-                            Informasi Siswa
+                            Student Information
                         </CardTitle>
-                        <CardDescription>Lengkapi informasi siswa untuk data akademik</CardDescription>
+                        <CardDescription>Complete student information for academic data</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">
-                                        Nama Lengkap <span className="text-red-500">*</span>
+                                        Full Name <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="name"
@@ -117,7 +117,7 @@ export default function CreateStudent() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="date_of_birth">
-                                        Tanggal Lahir <span className="text-red-500">*</span>
+                                        Date of Birth <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="date_of_birth"
@@ -134,7 +134,7 @@ export default function CreateStudent() {
                                     )}
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="address">Alamat</Label>
+                                    <Label htmlFor="address">Address</Label>
                                     <textarea
                                         id="address"
                                         value={data.address}
@@ -150,7 +150,7 @@ export default function CreateStudent() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Simpan Siswa
+                                    Save Student
                                 </Button>
                             </div>
                         </form>

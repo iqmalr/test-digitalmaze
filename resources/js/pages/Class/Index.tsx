@@ -286,8 +286,13 @@ export default function Index() {
                                               <TableCell className="text-center">
                                                   <div className="flex justify-center gap-2">
                                                       <Link href={`/classes/${cls.id}/detail`}>
-                                                          <Button variant="update" size="sm">
+                                                          <Button variant="default" size="sm">
                                                               Detail
+                                                          </Button>
+                                                      </Link>
+                                                      <Link href={`/classes/${cls.id}/edit`}>
+                                                          <Button variant="update" size="sm">
+                                                              Edit
                                                           </Button>
                                                       </Link>
                                                   </div>

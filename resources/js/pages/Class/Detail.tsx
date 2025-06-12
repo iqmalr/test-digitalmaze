@@ -9,7 +9,6 @@ interface Student {
     id: number;
     name: string;
     nisn: string;
-    gender: string;
 }
 
 interface Props extends PageProps {
@@ -22,7 +21,6 @@ interface Props extends PageProps {
         } | null;
     };
     students: Student[];
-    [key: string]: any;
 }
 
 interface StudentOption {
@@ -78,7 +76,7 @@ export default function ClassDetail() {
                     >
                         <option value="">-- Select Student --</option>
                         {allStudents.map((student) => (
-                            <option key={student.id} value={student.id.toString()}>
+                            <option className="bg-card" key={student.id} value={student.id.toString()}>
                                 {student.name}
                             </option>
                         ))}
@@ -103,7 +101,6 @@ export default function ClassDetail() {
                                 <TableHead>#</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>NISN</TableHead>
-                                <TableHead>Gender</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -119,7 +116,6 @@ export default function ClassDetail() {
                                         <TableCell>{i + 1}</TableCell>
                                         <TableCell>{student.name}</TableCell>
                                         <TableCell>{student.nisn}</TableCell>
-                                        <TableCell>{student.gender}</TableCell>
                                     </TableRow>
                                 ))
                             )}

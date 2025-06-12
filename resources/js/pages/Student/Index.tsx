@@ -1,5 +1,6 @@
 import AlertDialogDelete from '@/components/alert-dialog-delete';
 import HeadingSmall from '@/components/heading-small';
+import Pagination from '@/components/pagination';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Search, Terminal } from 'lucide-react';
+import { Search, Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -150,56 +151,6 @@ export default function Index() {
         ));
     };
 
-    const renderPagination = () => {
-        if (students.last_page <= 1) return null;
-
-        return (
-            <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                    Showing {students.from} to {students.to} of {students.total} results
-                </div>
-                <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => students.links[0].url && handlePageChange(students.links[0].url)}
-                        disabled={students.current_page === 1}
-                    >
-                        <ChevronLeft className="h-4 w-4" />
-                        Previous
-                    </Button>
-
-                    <div className="flex items-center gap-1">
-                        {students.links.slice(1, -1).map((link, index) => (
-                            <Button
-                                key={index}
-                                variant={link.active ? 'secondary' : 'outline'}
-                                size="sm"
-                                onClick={() => link.url && handlePageChange(link.url)}
-                                disabled={!link.url}
-                                className="min-w-[40px]"
-                            >
-                                {link.label}
-                            </Button>
-                        ))}
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                            students.links[students.links.length - 1].url && handlePageChange(students.links[students.links.length - 1].url)
-                        }
-                        disabled={students.current_page === students.last_page}
-                    >
-                        Next
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
-                </div>
-            </div>
-        );
-    };
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Student" />
@@ -328,7 +279,16 @@ export default function Index() {
                                       ))}
                             </TableBody>
                         </Table>
-                        {renderPagination()}
+                        {/* {renderPagination()} */}
+                        <Pagination
+                            currentPage={students.current_page}
+                            lastPage={students.last_page}
+                            from={students.from}
+                            to={students.to}
+                            total={students.total}
+                            links={students.links}
+                            onPageChange={handlePageChange}
+                        />
                     </div>
                 )}
             </div>
