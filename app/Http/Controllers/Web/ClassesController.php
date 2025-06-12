@@ -17,19 +17,22 @@ class ClassesController extends Controller
         $query = Classes::with('teacher');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhereHas('teacher', function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%');
+                });
         }
 
-        $classes = $query->latest()->paginate(10);
-        $teacher = $class->teacher;
+        $perPage = $request->input('per_page', 10);
+
+        $classes = $query->latest()->paginate($perPage)->withQueryString();
 
         return Inertia::render('Class/Index', [
             'classes' => $classes,
             'filters' => [
                 'search' => $request->search,
+                'per_page' => $perPage,
             ],
-            'teacher' => $teacher,
-
         ]);
     }
     //     public function show(Classes $class)

@@ -18,7 +18,7 @@ class TeacherSeeder extends Seeder
                 'nip' => fake()->unique()->numerify('############'),
                 'name' => fake()->name(),
                 'address' => fake()->address(),
-                'date_of_birth' => fake()->dateTimeBetween('1999-01-01', '2001-12-31')->format('Y-m-d'),
+                'date_of_birth' => fake()->dateTimeBetween('1980-01-01', '1990-12-31')->format('Y-m-d'),
             ]);
         }
     }
