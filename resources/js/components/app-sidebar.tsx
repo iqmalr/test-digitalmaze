@@ -28,6 +28,11 @@ const mainNavItems: NavItem[] = [
         href: '/classes',
         icon: School,
     },
+    {
+        title: 'StudentByClasses',
+        href: '/student-by-classes',
+        icon: School,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
