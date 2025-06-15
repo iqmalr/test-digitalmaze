@@ -1,6 +1,6 @@
 import HeadingSmall from '@/components/heading-small';
-import StudentByClassFilter from '@/components/StudentByClass/student-by-class-filter';
-import StudentByClassTable from '@/components/StudentByClass/student-by-class-table';
+import TeacherByClassFilter from '@/components/TeacherByClass/teacher-by-class-filter';
+import TeacherByClassTable from '@/components/TeacherByClass/teacher-by-class-table';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,12 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Filter, Search, Terminal } from 'lucide-react';
-import { useStudentByClass } from './useStudentByClass';
+import { useTeacherByClass } from './useTeacherByClass';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Class',
-        href: '/student-by-classes',
+        href: '/teacher-by-classes',
     },
 ];
 
@@ -41,7 +41,7 @@ export default function Index() {
         clearAllFilters,
         clearFiltersOnly,
         toggleFilters,
-    } = useStudentByClass();
+    } = useTeacherByClass();
 
     const renderEmptyState = () => (
         <div className="py-8 text-center">
@@ -59,7 +59,7 @@ export default function Index() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="space-y-6 px-4 py-6">
-                <HeadingSmall title="Student by Class" description="Manage and view students by their classes" />
+                <HeadingSmall title="Teacher by Class" description="Teacher by Class" />
 
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-medium">Class List</h2>
@@ -104,7 +104,7 @@ export default function Index() {
                     </div>
 
                     {showFilters && (
-                        <StudentByClassFilter
+                        <TeacherByClassFilter
                             isLoading={isLoading}
                             hasActiveFilters={hasActiveFilters}
                             selectedClassNames={selectedClassNames}
@@ -134,7 +134,7 @@ export default function Index() {
                 {!isLoading && classes.data.length === 0 ? (
                     renderEmptyState()
                 ) : (
-                    <StudentByClassTable classes={classes} isLoading={isLoading} perPage={perPage} handlePageChange={handlePageChange} />
+                    <TeacherByClassTable classes={classes} isLoading={isLoading} perPage={perPage} handlePageChange={handlePageChange} />
                 )}
             </div>
         </AppLayout>

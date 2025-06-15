@@ -3,13 +3,12 @@ import { router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { route } from 'ziggy-js';
 
-export const useStudentByClass = () => {
+export const useTeacherByClass = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [perPage, setPerPage] = useState(10);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedClassNames, setSelectedClassNames] = useState<string[]>([]);
     const [selectedAcademicYears, setSelectedAcademicYears] = useState<string[]>([]);
-    // const [selectedSemesters, setSelectedSemesters] = useState<number[]>([]);
     const [showFilters, setShowFilters] = useState(false);
 
     const { classes, flash, filters, filterOptions } = usePage().props as unknown as PageProps;
@@ -25,19 +24,17 @@ export const useStudentByClass = () => {
         setSearchTerm(filters.search ?? '');
         setPerPage(filters.per_page ?? 10);
         setSelectedAcademicYears(filters.academic_years ?? []);
-        // setSelectedSemesters(filters.semesters ?? []);
         setSelectedClassNames(filters.class_names ?? []);
     }, [filters]);
 
     const applyFilters = () => {
         router.get(
-            route('student-by-classes.index'),
+            route('teacher-by-classes.index'),
             {
                 search: searchTerm,
                 per_page: perPage,
                 class_names: selectedClassNames,
                 academic_years: selectedAcademicYears,
-                // semesters: selectedSemesters,
             },
             {
                 preserveState: true,
@@ -55,13 +52,12 @@ export const useStudentByClass = () => {
         const newPerPage = parseInt(value);
         setPerPage(newPerPage);
         router.get(
-            route('student-by-classes.index'),
+            route('teacher-by-classes.index'),
             {
                 search: searchTerm,
                 per_page: newPerPage,
                 class_names: selectedClassNames,
                 academic_years: selectedAcademicYears,
-                // semesters: selectedSemesters,
             },
             {
                 preserveState: true,
@@ -93,21 +89,12 @@ export const useStudentByClass = () => {
         }
     };
 
-    // const handleSemesterChange = (semester: number, checked: boolean) => {
-    //     if (checked) {
-    //         setSelectedSemesters((prev) => [...prev, semester]);
-    //     } else {
-    //         setSelectedSemesters((prev) => prev.filter((s) => s !== semester));
-    //     }
-    // };
-
     const clearAllFilters = () => {
         setSearchTerm('');
         setSelectedClassNames([]);
         setSelectedAcademicYears([]);
-        // setSelectedSemesters([]);
         router.get(
-            route('student-by-classes.index'),
+            route('teacher-by-classes.index'),
             { per_page: perPage },
             {
                 preserveState: true,
@@ -119,7 +106,6 @@ export const useStudentByClass = () => {
     const clearFiltersOnly = () => {
         setSelectedClassNames([]);
         setSelectedAcademicYears([]);
-        // setSelectedSemesters([]);
     };
 
     const toggleFilters = () => {
@@ -127,7 +113,6 @@ export const useStudentByClass = () => {
     };
 
     const hasActiveFilters = Boolean(searchTerm || selectedClassNames.length || selectedAcademicYears.length);
-    // const hasActiveFilters = Boolean(searchTerm || selectedClassNames.length || selectedAcademicYears.length || selectedSemesters.length);
 
     return {
         searchTerm,
@@ -136,7 +121,6 @@ export const useStudentByClass = () => {
         isLoading,
         selectedClassNames,
         selectedAcademicYears,
-        // selectedSemesters,
         showFilters,
         hasActiveFilters,
         classes,
@@ -147,7 +131,6 @@ export const useStudentByClass = () => {
         handlePageChange,
         handleClassNameChange,
         handleAcademicYearChange,
-        // handleSemesterChange,
         applyFilters,
         clearAllFilters,
         clearFiltersOnly,

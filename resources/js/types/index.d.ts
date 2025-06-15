@@ -48,10 +48,9 @@ export interface ClassItem {
         id: string;
         name: string;
     } | null;
-    capacity: number;
     description?: string;
     academic_year: string;
-    semester: number;
+    // semester: number;
 }
 
 export interface PaginationLink {
@@ -74,7 +73,7 @@ export interface PaginatedClasses {
 export interface FilterOptions {
     class_names: string[];
     academic_years: string[];
-    semesters: number[];
+    // semesters: number[];
 }
 
 export interface PageProps {
@@ -87,7 +86,7 @@ export interface PageProps {
         per_page: number;
         class_names: string[];
         academic_years: string[];
-        semesters: number[];
+        // semesters: number[];
     };
     filterOptions: FilterOptions;
 }

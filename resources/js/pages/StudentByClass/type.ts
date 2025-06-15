@@ -7,9 +7,8 @@ export interface ClassData {
     id: number;
     name: string;
     teacher?: Teacher;
-    capacity: number;
     academic_year: string;
-    semester: number;
+    // semester: number;
 }
 
 export interface PaginationLink {
@@ -32,7 +31,7 @@ export interface PaginatedClasses {
 export interface FilterOptions {
     class_names: string[];
     academic_years: string[];
-    semesters: number[];
+    // semesters: number[];
 }
 
 export interface Filters {
@@ -40,7 +39,7 @@ export interface Filters {
     per_page?: number;
     class_names?: string[];
     academic_years?: string[];
-    semesters?: number[];
+    // semesters?: number[];
 }
 
 export interface Flash {

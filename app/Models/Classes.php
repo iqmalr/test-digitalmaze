@@ -12,7 +12,8 @@ class Classes extends Model
 
     protected $table = 'm_classes';
 
-    protected $fillable = ['name', 'teacher_id', 'semester', 'academic_year'];
+    protected $fillable = ['name', 'teacher_id', 'academic_year'];
+    // protected $fillable = ['name', 'teacher_id', 'semester', 'academic_year'];
 
     public function teacher()
     {

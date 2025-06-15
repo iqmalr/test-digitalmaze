@@ -8,30 +8,25 @@ type Props = {
     hasActiveFilters: boolean;
     selectedClassNames: string[];
     selectedAcademicYears: string[];
-    // selectedSemesters: number[];
     filterOptions: {
         class_names: string[];
         academic_years: string[];
-        // semesters: number[];
     };
     handleClassNameChange: (className: string, checked: boolean) => void;
     handleAcademicYearChange: (year: string, checked: boolean) => void;
-    // handleSemesterChange: (semester: number, checked: boolean) => void;
     applyFilters: () => void;
     clearAllFilters: () => void;
     clearFiltersOnly: () => void;
 };
 
-export default function StudentByClassFilter({
+export default function TeacherByClassFilter({
     isLoading,
     hasActiveFilters,
     selectedClassNames,
     selectedAcademicYears,
-    // selectedSemesters,
     filterOptions,
     handleClassNameChange,
     handleAcademicYearChange,
-    // handleSemesterChange,
     applyFilters,
     clearAllFilters,
     clearFiltersOnly,

@@ -1,9 +1,7 @@
-import StudentByClassSkeleton from '@/components/StudentByClass/student-by-class-skeleton';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Link } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { route } from 'ziggy-js';
+import TeacherByClassSkeleton from './teacher-by-class-skeleton';
 
 interface Props {
     classes: any;
@@ -12,7 +10,7 @@ interface Props {
     handlePageChange: (url: string) => void;
 }
 
-export default function StudentByClassTable({ classes, isLoading, perPage, handlePageChange }: Props) {
+export default function TeacherByClassTable({ classes, isLoading, perPage, handlePageChange }: Props) {
     if (!classes) return null;
 
     const renderPagination = () => {
@@ -69,12 +67,11 @@ export default function StudentByClassTable({ classes, isLoading, perPage, handl
                         <TableHead>Name</TableHead>
                         <TableHead>Homeroom Teacher</TableHead>
                         <TableHead>Academic Year</TableHead>
-                        <TableHead className="text-center">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {isLoading ? (
-                        <StudentByClassSkeleton count={perPage} />
+                        <TeacherByClassSkeleton count={perPage} />
                     ) : (
                         classes.data.map((cls: any, i: number) => (
                             <TableRow key={cls.id}>
@@ -82,18 +79,6 @@ export default function StudentByClassTable({ classes, isLoading, perPage, handl
                                 <TableCell>{cls.name}</TableCell>
                                 <TableCell>{cls.teacher?.name ?? '-'}</TableCell>
                                 <TableCell className="max-w-[180px] truncate">{cls.academic_year}</TableCell>
-                                {/* <TableCell className="max-w-[180px] truncate">
-                                    {cls.academic_year} - Semester {cls.semester}
-                                </TableCell> */}
-                                <TableCell className="text-center">
-                                    <div className="flex justify-center gap-2">
-                                        <Link href={route('student-by-classes.detail', cls.id)}>
-                                            <Button variant="default" size="sm">
-                                                Detail
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </TableCell>
                             </TableRow>
                         ))
                     )}

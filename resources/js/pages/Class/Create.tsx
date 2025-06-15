@@ -23,7 +23,7 @@ export default function CreateClass() {
     const [teacherQuery, setTeacherQuery] = useState('');
     const { data, setData, post, processing, errors } = useForm({
         name: '',
-        semester: '',
+        // semester: '',
         academic_year: '',
         teacher_id: '',
     });
@@ -89,7 +89,7 @@ export default function CreateClass() {
                                     {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
                                 </div>
 
-                                <div className="space-y-2">
+                                {/* <div className="space-y-2">
                                     <Label htmlFor="semester">
                                         Semesters <span className="text-red-500">*</span>
                                     </Label>
@@ -101,7 +101,7 @@ export default function CreateClass() {
                                         className={errors.semester ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
-                                </div>
+                                </div> */}
 
                                 <div className="space-y-2">
                                     <Label htmlFor="academic_year">

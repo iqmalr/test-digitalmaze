@@ -61,7 +61,7 @@ class ClassesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'teacher_id' => 'nullable|exists:m_teachers,id',
-            'semester' => 'required|in:1,2',
+            // 'semester' => 'required|in:1,2',
             'academic_year' => 'required|string|max:20',
         ]);
 
@@ -123,7 +123,7 @@ class ClassesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'teacher_id' => 'nullable|exists:m_teachers,id',
-            'semester' => 'required|in:1,2',
+            // 'semester' => 'required|in:1,2',
             'academic_year' => 'required|string|max:20',
         ]);
 

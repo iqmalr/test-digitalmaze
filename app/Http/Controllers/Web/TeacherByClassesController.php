@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
-use App\Models\Student;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class StudentByClassesController extends Controller
+class TeacherByClassesController extends Controller
 {
-    public function index(Request $request, Classes $class)
+    public function index(Request $request)
     {
         $query = Classes::with('teacher');
 
@@ -38,7 +37,7 @@ class StudentByClassesController extends Controller
 
         $classes = $query->latest()->paginate($perPage)->withQueryString();
 
-        return Inertia::render('StudentByClass/Index', [
+        return Inertia::render('TeacherByClass/Index', [
             'classes' => $classes,
             'filters' => [
                 'search' => $request->search,
@@ -48,19 +47,6 @@ class StudentByClassesController extends Controller
                 // 'semesters' => $request->semesters ?? []
             ],
             'filterOptions' => $filterOptions
-        ]);
-    }
-    public function show(Classes $class)
-    {
-        $students = $class->students;
-        $teacher = $class->teacher;
-
-        $allStudents = Student::select('id', 'name')->get();
-        return Inertia::render('StudentByClass/Detail', [
-            'classItem' => $class,
-            'students' => $students,
-            'teacher' => $teacher,
-            'allStudents' => $allStudents,
         ]);
     }
 }
