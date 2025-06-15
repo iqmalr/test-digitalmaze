@@ -24,7 +24,7 @@ export default function EditClass() {
     const [teacherQuery, setTeacherQuery] = useState('');
     const { data, setData, post, processing, errors } = useForm({
         name: classData.name || '',
-        semester: classData.semester || '',
+        // semester: classData.semester || '',
         academic_year: classData.academic_year || '',
         teacher_id: classData.teacher_id || '',
     });
@@ -90,7 +90,7 @@ export default function EditClass() {
                                     {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
                                 </div>
 
-                                <div className="space-y-2">
+                                {/* <div className="space-y-2">
                                     <Label htmlFor="semester">
                                         Semester <span className="text-red-500">*</span>
                                     </Label>
@@ -102,7 +102,7 @@ export default function EditClass() {
                                         className={errors.semester ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                     />
                                     {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
-                                </div>
+                                </div> */}
 
                                 <div className="space-y-2">
                                     <Label htmlFor="academic_year">

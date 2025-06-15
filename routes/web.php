@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Web\ClassesController;
+use App\Http\Controllers\Web\StudentByClassesController;
 use App\Http\Controllers\Web\StudentController;
+use App\Http\Controllers\Web\SummaryController;
+use App\Http\Controllers\Web\TeacherByClassesController;
 use App\Http\Controllers\Web\TeacherController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +43,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{id}', [ClassesController::class, 'update'])->name('update');
         Route::get('/{class}/detail', [ClassesController::class, 'show'])->name('detail');
         Route::post('/{class}/assign-student', [ClassesController::class, 'assignStudent'])->name('assign-student');
+    });
+    Route::prefix('student-by-classes')->name('student-by-classes.')->group(function () {
+        Route::get('/', [StudentByClassesController::class, 'index'])->name('index');
+        Route::get('/{id}', [StudentByClassesController::class, 'show'])->name('show');
+        Route::get('/{class}/detail', [StudentByClassesController::class, 'show'])->name('detail');
+    });
+    Route::prefix('teacher-by-classes')->name('student-by-classes.')->group(function () {
+        Route::get('/', [TeacherByClassesController::class, 'index'])->name('index');
+        Route::get('/{id}', [TeacherByClassesController::class, 'show'])->name('show');
+        Route::get('/{class}/detail', [TeacherByClassesController::class, 'show'])->name('detail');
+    });
+    Route::prefix('summary')->name('summary.')->group(function () {
+        Route::get('/', [SummaryController::class, 'index'])->name('index');
     });
 });
 

@@ -15,7 +15,7 @@ class TeacherController extends Controller
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')->orwhere('nip', 'like', '%', $search . '%');
+                $q->where('name', 'like', '%' . $search . '%')->orWhere('nip', 'like', '%', $search . '%');
             });
         }
         $perPage = $request->get('per_page', 10);

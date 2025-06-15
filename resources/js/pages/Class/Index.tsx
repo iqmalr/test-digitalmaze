@@ -26,10 +26,9 @@ interface ClassItem {
         id: string;
         name: string;
     } | null;
-    capacity: number;
     description?: string;
     academic_year: string;
-    semester: number;
+    // semester: number;
 }
 
 interface PaginationLink {
@@ -188,7 +187,7 @@ export default function Index() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="space-y-6 px-4 py-6">
-                <HeadingSmall title="Class" description="Manage and view available classes" />
+                <HeadingSmall title="Class" description="UNTUK MELIHAT LIST SISWANYA DI TOMBOL DETAIL" />
 
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-medium">Class List</h2>
@@ -266,7 +265,6 @@ export default function Index() {
                                     <TableHead>#</TableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Homeroom Teacher</TableHead>
-                                    <TableHead>Capacity</TableHead>
                                     <TableHead>Academic Year</TableHead>
                                     <TableHead className="text-center">Actions</TableHead>
                                 </TableRow>
@@ -279,10 +277,7 @@ export default function Index() {
                                               <TableCell>{(classes.current_page - 1) * classes.per_page + i + 1}</TableCell>
                                               <TableCell>{cls.name}</TableCell>
                                               <TableCell>{cls.teacher?.name ?? '-'}</TableCell>
-                                              <TableCell>{cls.capacity}</TableCell>
-                                              <TableCell className="max-w-[180px] truncate">
-                                                  {cls.academic_year}-Semester {cls.semester}
-                                              </TableCell>
+                                              <TableCell className="max-w-[180px] truncate">{cls.academic_year}</TableCell>
                                               <TableCell className="text-center">
                                                   <div className="flex justify-center gap-2">
                                                       <Link href={`/classes/${cls.id}/detail`}>
