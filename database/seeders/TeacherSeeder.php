@@ -19,10 +19,10 @@ class TeacherSeeder extends Seeder
         for ($i = 1; $i <= 12; $i++) {
             DB::table('m_teachers')->insert([
                 'id' => Str::uuid(),
-                'name' => "Guru $i",
+                'name' =>  fake()->name(),
                 'nip' => '1980' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'address' => 'Alamat Guru ' . $i,
-                'date_of_birth' => Carbon::parse('1980-01-01')->addYears($i),
+                'date_of_birth' => fake()->dateTimeBetween('1980-01-01', '1990-12-31')->format('Y-m-d'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

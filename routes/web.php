@@ -49,7 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{id}', [StudentByClassesController::class, 'show'])->name('show');
         Route::get('/{class}/detail', [StudentByClassesController::class, 'show'])->name('detail');
     });
-    Route::prefix('teacher-by-classes')->name('student-by-classes.')->group(function () {
+    Route::prefix('teacher-by-classes')->name('teacher-by-classes.')->group(function () {
         Route::get('/', [TeacherByClassesController::class, 'index'])->name('index');
         Route::get('/{id}', [TeacherByClassesController::class, 'show'])->name('show');
         Route::get('/{class}/detail', [TeacherByClassesController::class, 'show'])->name('detail');

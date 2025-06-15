@@ -20,9 +20,10 @@ class StudentSeeder extends Seeder
             DB::table('m_students')->insert([
                 'id' => Str::uuid(),
                 'nisn' => '2023' . str_pad($i, 4, '0', STR_PAD_LEFT),
-                'name' => "Siswa $i",
+                'name' =>  fake()->name(),
                 'address' => "Alamat Siswa $i",
-                'date_of_birth' => Carbon::parse('2010-01-01')->addYears($i % 5),
+                // 'date_of_birth' => Carbon::parse('2010-01-01')->addYears($i % 5),
+                'date_of_birth' => fake()->dateTimeBetween('2010-01-01', '2011-01-01')->format('Y-m-d'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
