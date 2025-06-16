@@ -1,3 +1,4 @@
+// resources\js\pages\Summary\Index.tsx
 import HeadingSmall from '@/components/heading-small';
 import Pagination from '@/components/pagination';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -29,7 +30,7 @@ interface ClassData {
     id: string;
     name: string;
     academic_year: string;
-    teacher: Teacher;
+    teachers?: Teacher[];
 }
 
 interface Student {
@@ -41,28 +42,24 @@ interface Student {
     classes: ClassData[];
 }
 
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
-
-interface PaginatedStudents {
-    data: Student[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    from: number;
-    to: number;
-    links: PaginationLink[];
-}
-
 interface PageProps {
     flash?: {
         message?: string;
     };
-    students: PaginatedStudents;
+    students?: {
+        data: Student[];
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+        from: number;
+        to: number;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+    };
     filters: {
         search: string;
         per_page: number;
@@ -75,15 +72,31 @@ export default function Index() {
     const [searchTerm, setSearchTerm] = useState('');
     const [perPage, setPerPage] = useState(10);
     const [academicYear, setAcademicYear] = useState('2024/2025');
-    const { students, flash, filters, academic_years } = usePage().props as unknown as PageProps;
+    const {
+        students = {
+            data: [],
+            current_page: 1,
+            last_page: 1,
+            per_page: 10,
+            total: 0,
+            from: 0,
+            to: 0,
+            links: [],
+        },
+        flash,
+        filters,
+        academic_years,
+    } = usePage().props as unknown as PageProps;
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (students) {
+        if (students.data.length > 0) {
             const timer = setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
             return () => clearTimeout(timer);
+        } else {
+            setIsLoading(false);
         }
     }, [students]);
 
@@ -160,11 +173,11 @@ export default function Index() {
         if (!classes || classes.length === 0) {
             return '-';
         }
-        const uniqueTeachers = classes
-            .filter((cls) => cls.teacher)
-            .map((cls) => cls.teacher.name)
-            .filter((teacher, index, arr) => arr.indexOf(teacher) === index);
-        return uniqueTeachers.join(', ');
+
+        const teachers = classes.flatMap((cls) => (cls.teachers ? cls.teachers.map((teacher) => teacher.name) : []));
+
+        const uniqueTeachers = [...new Set(teachers)];
+        return uniqueTeachers.length > 0 ? uniqueTeachers.join(', ') : '-';
     };
 
     const renderSkeletonRows = () => {
@@ -185,11 +198,11 @@ export default function Index() {
                 <TableCell className="w-[200px]">
                     <Skeleton className="h-5 w-[180px]" />
                 </TableCell>
-                <TableCell>
-                    <div className="flex justify-center gap-2">
-                        <Skeleton className="h-9 w-[64px]" />
-                        <Skeleton className="h-9 w-[76px]" />
-                    </div>
+                <TableCell className="w-[160px]">
+                    <Skeleton className="h-5 w-[140px]" />
+                </TableCell>
+                <TableCell className="w-[160px]">
+                    <Skeleton className="h-5 w-[140px]" />
                 </TableCell>
             </TableRow>
         ));

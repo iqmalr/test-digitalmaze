@@ -41,7 +41,6 @@ export default function CreateClass() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Update teacher_ids with selected teachers
         setData(
             'teacher_ids',
             selectedTeachers.map((t) => t.id),
@@ -71,7 +70,6 @@ export default function CreateClass() {
         );
     };
 
-    // Filter out already selected teachers from the combobox options
     const availableTeachers = teachers.filter((teacher) => !selectedTeachers.find((selected) => selected.id === teacher.id));
 
     const hasErrors = Object.keys(errors).length > 0;

@@ -1,5 +1,6 @@
 import { Combobox } from '@/components/combobox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { PageProps } from '@inertiajs/core';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { AlertCircle, ArrowLeft, Layers } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Layers, X } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs = (className: string): BreadcrumbItem[] => [
@@ -20,21 +21,49 @@ const breadcrumbs = (className: string): BreadcrumbItem[] => [
 export default function EditClass() {
     const { props } = usePage<PageProps & { class: any; teachers: any[] }>();
     const { class: classData, teachers } = props;
-
-    const [teacherQuery, setTeacherQuery] = useState('');
     const { data, setData, post, processing, errors } = useForm({
         name: classData.name || '',
         // semester: classData.semester || '',
         academic_year: classData.academic_year || '',
-        teacher_id: classData.teacher_id || '',
+        teacher_ids: classData.teacher_id || [],
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setData(
+            'teacher_ids',
+            selectedTeachers.map((t) => t.id),
+        );
         post(route('classes.update', classData.id));
     };
 
     const hasErrors = Object.keys(errors).length > 0;
+    const [teacherQuery, setTeacherQuery] = useState('');
+    const [selectedTeachers, setSelectedTeachers] = useState(teachers.filter((t) => data.teacher_ids.includes(t.id)));
+
+    const handleTeacherSelect = (teacherId: string) => {
+        const teacher = teachers.find((t) => t.id === teacherId);
+        if (teacher && !selectedTeachers.find((t) => t.id === teacherId)) {
+            const newSelected = [...selectedTeachers, teacher];
+            setSelectedTeachers(newSelected);
+            setData(
+                'teacher_ids',
+                newSelected.map((t) => t.id),
+            );
+        }
+        setTeacherQuery('');
+    };
+
+    const handleRemoveTeacher = (teacherId: string) => {
+        const newSelected = selectedTeachers.filter((t) => t.id !== teacherId);
+        setSelectedTeachers(newSelected);
+        setData(
+            'teacher_ids',
+            newSelected.map((t) => t.id),
+        );
+    };
+
+    const availableTeachers = teachers.filter((t) => !selectedTeachers.find((sel) => sel.id === t.id));
 
     return (
         <AppLayout breadcrumbs={breadcrumbs(classData.name)}>
@@ -90,20 +119,6 @@ export default function EditClass() {
                                     {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
                                 </div>
 
-                                {/* <div className="space-y-2">
-                                    <Label htmlFor="semester">
-                                        Semester <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="semester"
-                                        value={data.semester}
-                                        onChange={(e) => setData('semester', e.target.value)}
-                                        placeholder="Contoh: 1 / 2"
-                                        className={errors.semester ? 'border-red-500 focus-visible:ring-red-500' : ''}
-                                    />
-                                    {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
-                                </div> */}
-
                                 <div className="space-y-2">
                                     <Label htmlFor="academic_year">
                                         Academic Year <span className="text-red-500">*</span>
@@ -119,16 +134,50 @@ export default function EditClass() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="teacher_id">Homeroom Teacher</Label>
-                                    <Combobox
-                                        options={teachers.map((t) => ({ label: t.name, value: t.id }))}
-                                        selectedValue={data.teacher_id}
-                                        onInputChange={setTeacherQuery}
-                                        onSelect={(value) => setData('teacher_id', value)}
-                                        inputPlaceholder="Cari nama guru..."
-                                        filterQuery={teacherQuery}
-                                    />
-                                    {errors.teacher_id && <p className="text-xs text-red-500">{errors.teacher_id}</p>}
+                                    <Label htmlFor="teachers">Teachers (Optional)</Label>
+                                    <div className="space-y-3">
+                                        {selectedTeachers.length > 0 && (
+                                            <div className="space-y-2">
+                                                <p className="text-sm text-muted-foreground">Selected Teachers:</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {selectedTeachers.map((teacher) => (
+                                                        <Badge key={teacher.id} variant="secondary" className="flex items-center gap-1 px-3 py-1">
+                                                            {teacher.name}
+                                                            <Button
+                                                                type="button"
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="ml-1 h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                                                                onClick={() => handleRemoveTeacher(teacher.id)}
+                                                            >
+                                                                <X className="h-3 w-3" />
+                                                            </Button>
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {availableTeachers.length > 0 && (
+                                            <div>
+                                                <Combobox
+                                                    options={availableTeachers.map((t) => ({ label: t.name, value: t.id }))}
+                                                    selectedValue=""
+                                                    onInputChange={setTeacherQuery}
+                                                    onSelect={handleTeacherSelect}
+                                                    inputPlaceholder={
+                                                        selectedTeachers.length > 0 ? 'Add another teacher...' : 'Search and select teachers...'
+                                                    }
+                                                    filterQuery={teacherQuery}
+                                                />
+                                            </div>
+                                        )}
+
+                                        {availableTeachers.length === 0 && selectedTeachers.length > 0 && (
+                                            <p className="text-sm text-muted-foreground italic">All available teachers have been selected.</p>
+                                        )}
+                                    </div>
+                                    {errors.teacher_ids && <p className="text-xs text-red-500">{errors.teacher_ids}</p>}
                                 </div>
                             </div>
 

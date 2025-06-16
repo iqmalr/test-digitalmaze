@@ -46,14 +46,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::prefix('student-by-classes')->name('student-by-classes.')->group(function () {
         Route::get('/', [StudentByClassesController::class, 'index'])->name('index');
-        Route::get('/{id}', [StudentByClassesController::class, 'show'])->name('show');
-        Route::get('/{class}/detail', [StudentByClassesController::class, 'show'])->name('detail');
+        // Route::get('/{id}', [StudentByClassesController::class, 'show'])->name('show');
+        // Route::get('/{class}/detail', [StudentByClassesController::class, 'show'])->name('detail');
     });
     Route::prefix('teacher-by-classes')->name('teacher-by-classes.')->group(function () {
         Route::get('/', [TeacherByClassesController::class, 'index'])->name('index');
-        Route::get('/{id}', [TeacherByClassesController::class, 'show'])->name('show');
-        Route::get('/{class}/detail', [TeacherByClassesController::class, 'show'])->name('detail');
     });
+    // Route::get('/{id}', [TeacherByClassesController::class, 'show'])->name('show');
+    // Route::get('/{class}/detail', [TeacherByClassesController::class, 'show'])->name('detail');
     Route::prefix('summary')->name('summary.')->group(function () {
         Route::get('/', [SummaryController::class, 'index'])->name('index');
     });

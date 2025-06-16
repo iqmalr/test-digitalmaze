@@ -6,61 +6,63 @@ use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class StudentByClassesController extends Controller
 {
-    public function index(Request $request, Classes $class)
+    public function index(Request $request)
     {
-        $query = Classes::with('teacher');
+        $academicYear = $request->get('academic_year', '2024/2025');
+        $sortByClass = $request->get('sort_by_class', 'asc');
+        $perPage = $request->get('per_page', 10);
+
+        $query = Student::query()
+            ->with(['classes' => function ($query) use ($academicYear) {
+                $query->where('academic_year', $academicYear)->with('teacher');
+            }])
+            ->whereHas('classes', function ($classQuery) use ($academicYear) {
+                $classQuery->where('academic_year', $academicYear);
+            });
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                ->orWhereHas('teacher', function ($q) use ($request) {
-                    $q->where('name', 'like', '%' . $request->search . '%');
-                });
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search, $academicYear) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('nisn', 'like', '%' . $search . '%')
+                    ->orWhere('address', 'like', '%' . $search . '%')
+                    ->orWhereHas('classes', function ($classQuery) use ($search, $academicYear) {
+                        $classQuery->where('academic_year', $academicYear)
+                            ->where('name', 'like', '%' . $search . '%');
+                    });
+            });
         }
-        if ($request->filled('class_names') && is_array($request->class_names)) {
-            $query->whereIn('name', $request->class_names);
-        }
-        // if ($request->filled('semesters') && is_array($request->semesters)) {
-        //     $query->whereIn('semester', $request->semesters);
-        // }
-        if ($request->filled('academic_years') && is_array($request->academic_years)) {
-            $query->whereIn('academic_year', $request->academic_years);
-        }
-        $filterOptions = [
-            'class_names' => Classes::distinct()->pluck('name')->filter()->sort()->values(),
-            'academic_years' => Classes::distinct()->pluck('academic_year')->filter()->sort()->values(),
-            // 'semesters' => Classes::distinct()->pluck('semester')->filter()->sort()->values()
-        ];
-        $perPage = $request->input('per_page', 10);
 
-        $classes = $query->latest()->paginate($perPage)->withQueryString();
+        $query->withCount([
+            'classes as class_name' => function ($q) use ($academicYear) {
+                $q->select('m_classes.name')
+                    ->where('academic_year', $academicYear);
+            }
+        ]);
+
+        $students = $query->orderBy('class_name', $sortByClass)->paginate($perPage);
+        $students->appends($request->query());
+
+        $academicYears = Classes::select('academic_year')
+            ->distinct()
+            ->orderBy('academic_year', 'desc')
+            ->pluck('academic_year')
+            ->toArray();
 
         return Inertia::render('StudentByClass/Index', [
-            'classes' => $classes,
-            'filters' => [
-                'search' => $request->search,
-                'per_page' => $perPage,
-                'class_names' => $request->class_names ?? [],
-                'academic_years' => $request->academic_years ?? [],
-                // 'semesters' => $request->semesters ?? []
-            ],
-            'filterOptions' => $filterOptions
-        ]);
-    }
-    public function show(Classes $class)
-    {
-        $students = $class->students;
-        $teacher = $class->teacher;
-
-        $allStudents = Student::select('id', 'name')->get();
-        return Inertia::render('StudentByClass/Detail', [
-            'classItem' => $class,
             'students' => $students,
-            'teacher' => $teacher,
-            'allStudents' => $allStudents,
+            'filters' => [
+                'search' => $request->get('search', ''),
+                'per_page' => $perPage,
+                'academic_year' => $academicYear,
+                'sort_by_class' => $sortByClass,
+            ],
+            'academic_years' => $academicYears
         ]);
     }
 }
