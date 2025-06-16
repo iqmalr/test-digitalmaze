@@ -37,16 +37,19 @@ class TeacherByClassesController extends Controller
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search, $academicYear) {
-                $q->where('name', 'like', '%' . $search . '%')
+                $q->where('m_teachers.name', 'like', '%' . $search . '%')
                     ->orWhere('nip', 'like', '%' . $search . '%')
                     ->orWhereHas('classes', function ($classQuery) use ($search, $academicYear) {
                         $classQuery->where('academic_year', $academicYear)
-                            ->where('name', 'like', '%' . $search . '%');
+                            ->where('m_classes.name', 'like', '%' . $search . '%');
                     });
             });
         }
 
-        $teachers = $query->orderBy('name', 'asc')->paginate($perPage);
+        $teachers = $query->orderBy('m_teachers.name', 'asc')->paginate($perPage);
+
+
+        $teachers = $query->orderBy('m_teachers.name', 'asc')->paginate($perPage);
         $teachers->appends($request->query());
 
         $academicYears = Classes::select('academic_year')

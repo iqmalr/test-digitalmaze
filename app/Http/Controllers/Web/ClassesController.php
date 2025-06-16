@@ -155,7 +155,18 @@ class ClassesController extends Controller
             'name' => $validated['name'],
             'academic_year' => $validated['academic_year'],
         ]);
-        $class->teachers()->sync($validated['teacher_ids'] ?? []);
+        // $class->teachers()->sync($validated['teacher_ids'] ?? []);
+        $teacherData = collect($validated['teacher_ids'] ?? [])->mapWithKeys(function ($teacherId) {
+            return [
+                $teacherId => [
+                    'id' => Str::uuid(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ];
+        });
+
+        $class->teachers()->sync($teacherData);
         return redirect()->route('classes.index')->with('message', 'Kelas berhasil diperbarui.');
     }
 }
