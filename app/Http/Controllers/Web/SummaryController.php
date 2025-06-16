@@ -37,7 +37,15 @@ class SummaryController extends Controller
         }
 
         $perPage = $request->get('per_page', 10);
-        $students = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        // $students = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        $query->join('t_class_student', 'm_students.id', '=', 't_class_student.student_id')
+            ->join('m_classes', function ($join) use ($academicYear) {
+                $join->on('t_class_student.class_id', '=', 'm_classes.id')
+                    ->where('m_classes.academic_year', $academicYear);
+            })
+            ->select('m_students.*');
+
+        $students = $query->orderBy('m_classes.name', 'asc')->paginate($perPage);
         $students->appends($request->query());
 
         $academicYears = Classes::select('academic_year')
