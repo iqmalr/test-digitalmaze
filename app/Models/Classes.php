@@ -29,4 +29,22 @@ class Classes extends Model
             'student_id'
         )->withTimestamps();
     }
+    public function teachers()
+    {
+        return $this->belongsToMany(
+            Teacher::class,
+            'class_teacher',
+            'class_id',
+            'teacher_id'
+        )->withTimestamps();
+    }
+    public function getPrimaryTeacherAttribute()
+    {
+        return $this->teachers()->first();
+    }
+
+    public function getTeachersNamesAttribute()
+    {
+        return $this->teachers->pluck('name')->join(', ');
+    }
 }
