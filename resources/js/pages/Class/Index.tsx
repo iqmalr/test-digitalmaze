@@ -264,7 +264,7 @@ export default function Index() {
                                 <TableRow>
                                     <TableHead>#</TableHead>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Homeroom Teacher</TableHead>
+                                    {/* <TableHead>Homeroom Teacher</TableHead> */}
                                     <TableHead>Academic Year</TableHead>
                                     <TableHead className="text-center">Actions</TableHead>
                                 </TableRow>
@@ -276,7 +276,7 @@ export default function Index() {
                                           <TableRow key={cls.id}>
                                               <TableCell>{(classes.current_page - 1) * classes.per_page + i + 1}</TableCell>
                                               <TableCell>{cls.name}</TableCell>
-                                              <TableCell>{cls.teacher?.name ?? '-'}</TableCell>
+                                              {/* <TableCell>{cls.teacher?.name ?? '-'}</TableCell> */}
                                               <TableCell className="max-w-[180px] truncate">{cls.academic_year}</TableCell>
                                               <TableCell className="text-center">
                                                   <div className="flex justify-center gap-2">

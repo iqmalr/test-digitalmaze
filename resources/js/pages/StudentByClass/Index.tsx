@@ -19,7 +19,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface ClassData {
+interface Classes {
     id: string;
     name: string;
     academic_year: string;
@@ -31,7 +31,7 @@ interface Student {
     nisn?: string;
     date_of_birth: string;
     address: string;
-    classes: ClassData[];
+    classes: Classes[];
 }
 
 interface PaginationLink {
@@ -62,6 +62,11 @@ interface PageProps {
         academic_year: string;
     };
     academic_years: string[];
+}
+
+interface GroupedStudentsByClass {
+    className: string;
+    students: Student[];
 }
 
 export default function Index() {
@@ -142,13 +147,6 @@ export default function Index() {
         });
     };
 
-    const formatClasses = (classes: ClassData[]) => {
-        if (!classes || classes.length === 0) {
-            return '-';
-        }
-        return classes.map((cls) => cls.name).join(', ');
-    };
-
     const renderSkeletonRows = () => {
         return Array.from({ length: perPage }).map((_, i) => (
             <TableRow key={i}>
@@ -168,13 +166,27 @@ export default function Index() {
                     <Skeleton className="h-5 w-[180px]" />
                 </TableCell>
                 <TableCell>
-                    <div className="flex justify-center gap-2">
-                        <Skeleton className="h-9 w-[64px]" />
-                        <Skeleton className="h-9 w-[76px]" />
-                    </div>
+                    <Skeleton className="h-5 w-[100px]" />
                 </TableCell>
             </TableRow>
         ));
+    };
+
+    const groupStudentsByClass = (students: Student[]): GroupedStudentsByClass[] => {
+        const classGroups = new Map<string, Student[]>();
+
+        students.forEach((student) => {
+            const primaryClass = student.classes && student.classes.length > 0 ? student.classes[0].name : 'No Class';
+
+            if (!classGroups.has(primaryClass)) {
+                classGroups.set(primaryClass, []);
+            }
+            classGroups.get(primaryClass)!.push(student);
+        });
+
+        return Array.from(classGroups.entries())
+            .map(([className, students]) => ({ className, students }))
+            .sort((a, b) => a.className.localeCompare(b.className));
     };
 
     return (
@@ -202,6 +214,7 @@ export default function Index() {
                         </SelectContent>
                     </Select>
                 </div>
+
                 <div className="space-y-4 rounded-lg bg-muted/30 p-4">
                     <div className="flex items-center gap-4">
                         <form onSubmit={handleSearch} className="flex flex-1 items-center gap-2">
@@ -287,20 +300,29 @@ export default function Index() {
                             <TableBody>
                                 {isLoading
                                     ? renderSkeletonRows()
-                                    : students.data.map((student: Student, index: number) => (
-                                          <TableRow key={student.id}>
-                                              <TableCell>{(students.current_page - 1) * students.per_page + index + 1}</TableCell>
-                                              <TableCell className="font-medium">{student.name}</TableCell>
-                                              <TableCell>{student.nisn || '-'}</TableCell>
-                                              <TableCell>{student.date_of_birth}</TableCell>
-                                              <TableCell className="max-w-[200px] truncate" title={student.address}>
-                                                  {student.address}
-                                              </TableCell>
-                                              <TableCell className="max-w-[160px] truncate" title={formatClasses(student.classes)}>
-                                                  {formatClasses(student.classes)}
-                                              </TableCell>
-                                          </TableRow>
-                                      ))}
+                                    : (() => {
+                                          const groupedStudents = groupStudentsByClass(students.data);
+                                          let rowNumber = (students.current_page - 1) * students.per_page + 1;
+
+                                          return groupedStudents.map((group) => (
+                                              <>
+                                                  {group.students.map((student, studentIndex) => (
+                                                      <TableRow key={student.id}>
+                                                          <TableCell>{rowNumber++}</TableCell>
+                                                          <TableCell className="font-medium">{student.name}</TableCell>
+                                                          <TableCell>{student.nisn || '-'}</TableCell>
+                                                          <TableCell>{student.date_of_birth}</TableCell>
+                                                          <TableCell className="max-w-[200px] truncate" title={student.address}>
+                                                              {student.address}
+                                                          </TableCell>
+                                                          <TableCell className="max-w-[160px] truncate">
+                                                              {studentIndex === 0 ? <span>{group.className}</span> : <span></span>}
+                                                          </TableCell>
+                                                      </TableRow>
+                                                  ))}
+                                              </>
+                                          ));
+                                      })()}
                             </TableBody>
                         </Table>
                         <Pagination

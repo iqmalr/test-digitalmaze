@@ -16,7 +16,7 @@ class TeacherSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 12; $i++) {
+        for ($i = 1; $i <= 19; $i++) {
             DB::table('m_teachers')->insert([
                 'id' => Str::uuid(),
                 'name' =>  fake()->name(),

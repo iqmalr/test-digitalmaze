@@ -25,7 +25,9 @@ class ClassSeeder extends Seeder
         foreach ($academicYears as $yearIndex => $year) {
             foreach ($classNames as $i => $className) {
                 $classId = Str::uuid();
-                $teacherId = $teachers[$teacherIndex++];
+                // $teacherId = $teachers[$teacherIndex++];
+                $teacherId = $teachers[$teacherIndex % count($teachers)];
+                $teacherIndex++;
 
                 DB::table('m_classes')->insert([
                     'id' => $classId,
@@ -36,7 +38,13 @@ class ClassSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-
+                DB::table('class_teacher')->insert([
+                    'id' => Str::uuid(),
+                    'class_id' => $classId,
+                    'teacher_id' => $teacherId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
                 for ($j = 0; $j < 5; $j++) {
                     if ($yearIndex === 0) {
                         $studentOffset = ($i * 5) + $j;

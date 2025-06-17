@@ -19,13 +19,18 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/students',
     },
 ];
-
+interface Classes {
+    id: string;
+    name: string;
+    academic_year: string;
+}
 interface Student {
     id: string;
     name: string;
     nisn?: string;
     date_of_birth: string;
     address: string;
+    classes: Classes[];
 }
 
 interface PaginationLink {
@@ -242,41 +247,53 @@ export default function Index() {
                             <TableBody>
                                 {isLoading
                                     ? renderSkeletonRows()
-                                    : students.data.map((student: Student, index: number) => (
-                                          <TableRow key={student.id}>
-                                              <TableCell>{(students.current_page - 1) * students.per_page + index + 1}</TableCell>
-                                              <TableCell className="font-medium">{student.name}</TableCell>
-                                              <TableCell>{student.nisn || '-'}</TableCell>
-                                              <TableCell>{student.date_of_birth}</TableCell>
-                                              <TableCell className="max-w-[200px] truncate" title={student.address}>
-                                                  {student.address}
-                                              </TableCell>
-                                              <TableCell className="text-center">
-                                                  <div className="flex justify-center gap-2">
-                                                      <Link href={`/students/${student.id}/edit`}>
-                                                          <Button variant="update" size="sm">
-                                                              Edit
-                                                          </Button>
-                                                      </Link>
-                                                      <AlertDialogDelete
-                                                          title="Are you sure?"
-                                                          description={`This will permanently delete the student "${student.name}".`}
-                                                          onConfirm={handleDelete}
-                                                          loading={processing}
-                                                      >
-                                                          <Button
-                                                              variant="destructive"
-                                                              size="sm"
-                                                              onClick={() => setSelectedStudent(student)}
-                                                              disabled={processing}
-                                                          >
-                                                              Delete
-                                                          </Button>
-                                                      </AlertDialogDelete>
-                                                  </div>
-                                              </TableCell>
-                                          </TableRow>
-                                      ))}
+                                    : (() => {
+                                          //   const groupedStudents = groupStudentsByClass(students.data);
+                                          let rowNumber = (students.current_page - 1) * students.per_page + 1;
+
+                                          return students.data.map((student) => (
+                                              <>
+                                                  {/* {group.students.map((student, studentIndex) => ( */}
+                                                  <TableRow key={student.id}>
+                                                      <TableCell>{rowNumber++}</TableCell>
+                                                      <TableCell className="font-medium">{student.name}</TableCell>
+                                                      <TableCell>{student.nisn || '-'}</TableCell>
+                                                      <TableCell>{student.date_of_birth}</TableCell>
+                                                      <TableCell className="max-w-[200px] truncate" title={student.address}>
+                                                          {student.address}
+                                                      </TableCell>
+                                                      {/* <TableCell className="max-w-[160px] truncate">
+                                                          {studentIndex === 0 ? <span>{group.className}</span> : <span></span>}
+                                                      </TableCell> */}
+                                                      <TableCell className="text-center">
+                                                          <div className="flex justify-center gap-2">
+                                                              <Link href={`/students/${student.id}/edit`}>
+                                                                  <Button variant="update" size="sm">
+                                                                      Edit
+                                                                  </Button>
+                                                              </Link>
+                                                              <AlertDialogDelete
+                                                                  title="Are you sure?"
+                                                                  description={`This will permanently delete the student "${student.name}".`}
+                                                                  onConfirm={handleDelete}
+                                                                  loading={processing}
+                                                              >
+                                                                  <Button
+                                                                      variant="destructive"
+                                                                      size="sm"
+                                                                      onClick={() => setSelectedStudent(student)}
+                                                                      disabled={processing}
+                                                                  >
+                                                                      Delete
+                                                                  </Button>
+                                                              </AlertDialogDelete>
+                                                          </div>
+                                                      </TableCell>
+                                                  </TableRow>
+                                                  {/* ))} */}
+                                              </>
+                                          ));
+                                      })()}
                             </TableBody>
                         </Table>
                         {/* {renderPagination()} */}

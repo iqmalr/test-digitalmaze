@@ -1,4 +1,3 @@
-// resources\js\pages\Summary\Index.tsx
 import HeadingSmall from '@/components/heading-small';
 import Pagination from '@/components/pagination';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
