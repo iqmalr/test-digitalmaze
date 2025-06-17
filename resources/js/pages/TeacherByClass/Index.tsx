@@ -142,6 +142,11 @@ export default function Index() {
             replace: true,
         });
     };
+    const sortedTeachers = [...teachers.data].sort((a, b) => {
+        const aClass = a.classes[0]?.name || '';
+        const bClass = b.classes[0]?.name || '';
+        return aClass.localeCompare(bClass, 'id', { numeric: true });
+    });
 
     const renderSkeletonRows = () => {
         return Array.from({ length: perPage }).map((_, i) => (
@@ -280,7 +285,7 @@ export default function Index() {
                             <TableBody>
                                 {isLoading
                                     ? renderSkeletonRows()
-                                    : teachers.data.map((teacher: Teacher, index: number) => (
+                                    : sortedTeachers.map((teacher: Teacher, index: number) => (
                                           <TableRow key={teacher.id}>
                                               <TableCell>{(teachers.current_page - 1) * teachers.per_page + index + 1}</TableCell>
                                               <TableCell className="font-medium">{teacher.name}</TableCell>

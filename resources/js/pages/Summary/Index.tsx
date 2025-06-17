@@ -19,17 +19,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Classes {
+    id: string;
+    name: string;
+    academic_year: string;
+}
 interface Teacher {
     id: string;
     name: string;
     nip?: string;
-}
-
-interface ClassData {
-    id: string;
-    name: string;
-    academic_year: string;
-    teachers?: Teacher[];
 }
 
 interface Student {
@@ -38,7 +36,13 @@ interface Student {
     nisn?: string;
     date_of_birth: string;
     address: string;
-    classes: ClassData[];
+    classes: Classes[];
+}
+
+interface GroupedStudentsByClass {
+    className: string;
+    students: Student[];
+    teachers: string;
 }
 
 interface PageProps {
@@ -161,24 +165,6 @@ export default function Index() {
         });
     };
 
-    const formatClasses = (classes: ClassData[]) => {
-        if (!classes || classes.length === 0) {
-            return '-';
-        }
-        return classes.map((cls) => cls.name).join(', ');
-    };
-
-    const formatTeachers = (classes: ClassData[]) => {
-        if (!classes || classes.length === 0) {
-            return '-';
-        }
-
-        const teachers = classes.flatMap((cls) => (cls.teachers ? cls.teachers.map((teacher) => teacher.name) : []));
-
-        const uniqueTeachers = [...new Set(teachers)];
-        return uniqueTeachers.length > 0 ? uniqueTeachers.join(', ') : '-';
-    };
-
     const renderSkeletonRows = () => {
         return Array.from({ length: perPage }).map((_, i) => (
             <TableRow key={i}>
@@ -207,6 +193,32 @@ export default function Index() {
         ));
     };
 
+    const groupStudentsByClass = (students: Student[]): GroupedStudentsByClass[] => {
+        const classGroups = new Map<string, { students: Student[]; teachers: string }>();
+
+        students.forEach((student) => {
+            const primaryClass = student.classes && student.classes.length > 0 ? student.classes[0].name : 'No Class';
+
+            if (!classGroups.has(primaryClass)) {
+                // Get teachers for this class from the first student's class data
+                const classData = student.classes.find((cls) => cls.name === primaryClass);
+                const teachers =
+                    classData && (classData as any).teachers ? (classData as any).teachers.map((teacher: Teacher) => teacher.name).join(', ') : '-';
+
+                classGroups.set(primaryClass, { students: [], teachers });
+            }
+            classGroups.get(primaryClass)!.students.push(student);
+        });
+
+        return Array.from(classGroups.entries())
+            .map(([className, { students, teachers }]) => ({
+                className,
+                students,
+                teachers,
+            }))
+            .sort((a, b) => a.className.localeCompare(b.className));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Summary" />
@@ -232,6 +244,7 @@ export default function Index() {
                         </SelectContent>
                     </Select>
                 </div>
+
                 <div className="space-y-4 rounded-lg bg-muted/30 p-4">
                     <div className="flex items-center gap-4">
                         <form onSubmit={handleSearch} className="flex flex-1 items-center gap-2">
@@ -318,23 +331,30 @@ export default function Index() {
                             <TableBody>
                                 {isLoading
                                     ? renderSkeletonRows()
-                                    : students.data.map((student: Student, index: number) => (
-                                          <TableRow key={student.id}>
-                                              <TableCell>{(students.current_page - 1) * students.per_page + index + 1}</TableCell>
-                                              <TableCell className="font-medium">{student.name}</TableCell>
-                                              <TableCell>{student.nisn || '-'}</TableCell>
-                                              <TableCell>{student.date_of_birth}</TableCell>
-                                              <TableCell className="max-w-[200px] truncate" title={student.address}>
-                                                  {student.address}
-                                              </TableCell>
-                                              <TableCell className="max-w-[160px] truncate" title={formatClasses(student.classes)}>
-                                                  {formatClasses(student.classes)}
-                                              </TableCell>
-                                              <TableCell className="max-w-[160px] truncate" title={formatTeachers(student.classes)}>
-                                                  {formatTeachers(student.classes)}
-                                              </TableCell>
-                                          </TableRow>
-                                      ))}
+                                    : (() => {
+                                          const groupedStudents = groupStudentsByClass(students.data);
+                                          let rowNumber = (students.current_page - 1) * students.per_page + 1;
+
+                                          return groupedStudents.flatMap((group) =>
+                                              group.students.map((student, studentIndex) => (
+                                                  <TableRow key={student.id}>
+                                                      <TableCell>{rowNumber++}</TableCell>
+                                                      <TableCell className="font-medium">{student.name}</TableCell>
+                                                      <TableCell>{student.nisn || '-'}</TableCell>
+                                                      <TableCell>{student.date_of_birth}</TableCell>
+                                                      <TableCell className="max-w-[200px] truncate" title={student.address}>
+                                                          {student.address}
+                                                      </TableCell>
+                                                      <TableCell className="max-w-[160px] truncate">
+                                                          {studentIndex === 0 ? <span>{group.className}</span> : <span></span>}
+                                                      </TableCell>
+                                                      <TableCell className="max-w-[160px] truncate" title={group.teachers}>
+                                                          {studentIndex === 0 ? <span>{group.teachers}</span> : <span></span>}
+                                                      </TableCell>
+                                                  </TableRow>
+                                              )),
+                                          );
+                                      })()}
                             </TableBody>
                         </Table>
                         <Pagination
