@@ -30,7 +30,7 @@ class ClassSeeder extends Seeder
                 DB::table('m_classes')->insert([
                     'id' => $classId,
                     'name' => 'Kelas ' . $className,
-                    'teacher_id' => $teacherId,
+                    // 'teacher_id' => $teacherId,
                     'academic_year' => $year,
                     'semester' => null,
                     'created_at' => now(),
