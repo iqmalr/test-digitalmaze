@@ -25,7 +25,8 @@ export default function EditClass() {
         name: classData.name || '',
         // semester: classData.semester || '',
         academic_year: classData.academic_year || '',
-        teacher_ids: classData.teacher_id || [],
+        // teacher_ids: classData.teacher_id || [],
+        teacher_ids: classData.selected_teacher_ids || [],
     });
 
     const handleSubmit = (e: React.FormEvent) => {

@@ -15,7 +15,21 @@ class SummaryController extends Controller
     {
         $academicYear = $request->get('academic_year', '2024/2025');
         $sortByClass = $request->get('sort_by_class', 'asc');
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->get('per_page', 100);
+        $students = DB::table('t_class_student')
+            ->join('m_classes', 't_class_student.class_id', '=', 'm_classes.id')
+            ->join('m_students', 't_class_student.student_id', '=', 'm_students.id')
+            ->where('m_classes.academic_year', $academicYear)
+            ->select([
+                'm_classes.id as class_id',
+                'm_classes.name as class_name',
+                'm_students.id as student_id',
+                'm_students.name as student_name',
+            ])
+            ->orderBy('m_classes.name', $sortByClass)
+            ->get();
+
+        // dd($students);
         // $query = Student::query()->with(['classes' => function ($query) use ($academicYear) {
         //     $query->where('academic_year', $academicYear)->with('teacher');
         // }]);

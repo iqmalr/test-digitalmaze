@@ -200,7 +200,6 @@ export default function Index() {
             const primaryClass = student.classes && student.classes.length > 0 ? student.classes[0].name : 'No Class';
 
             if (!classGroups.has(primaryClass)) {
-                // Get teachers for this class from the first student's class data
                 const classData = student.classes.find((cls) => cls.name === primaryClass);
                 const teachers =
                     classData && (classData as any).teachers ? (classData as any).teachers.map((teacher: Teacher) => teacher.name).join(', ') : '-';

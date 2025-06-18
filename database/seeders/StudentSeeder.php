@@ -16,7 +16,7 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 35; $i++) {
+        for ($i = 1; $i <= 40; $i++) {
             DB::table('m_students')->insert([
                 'id' => Str::uuid(),
                 'nisn' => '2023' . str_pad($i, 4, '0', STR_PAD_LEFT),

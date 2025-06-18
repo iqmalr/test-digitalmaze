@@ -148,7 +148,6 @@ export default function CreateClass() {
                                         Teachers (Optional)
                                     </Label>
                                     <div className="space-y-3">
-                                        {/* Selected Teachers Display */}
                                         {selectedTeachers.length > 0 && (
                                             <div className="space-y-2">
                                                 <p className="text-sm text-muted-foreground">Selected Teachers:</p>
@@ -171,7 +170,6 @@ export default function CreateClass() {
                                             </div>
                                         )}
 
-                                        {/* Teacher Selection Combobox */}
                                         {availableTeachers.length > 0 && (
                                             <div>
                                                 <Combobox

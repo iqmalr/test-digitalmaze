@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{id}', [ClassesController::class, 'update'])->name('update');
         Route::get('/{class}/detail', [ClassesController::class, 'show'])->name('detail');
         Route::post('/{class}/assign-student', [ClassesController::class, 'assignStudent'])->name('assign-student');
+        Route::delete('/{id}', [ClassesController::class, 'destroy'])->name('destroy');
     });
     Route::prefix('student-by-classes')->name('student-by-classes.')->group(function () {
         Route::get('/', [StudentByClassesController::class, 'index'])->name('index');

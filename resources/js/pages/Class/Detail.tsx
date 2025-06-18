@@ -15,7 +15,7 @@ interface Props extends PageProps {
     classItem: {
         id: number;
         name: string;
-        teacher?: {
+        teachers?: {
             id: string;
             name: string;
         } | null;
@@ -64,8 +64,10 @@ export default function ClassDetail() {
             <div className="space-y-6 p-6">
                 <HeadingSmall title="Class" />
                 <h1 className="text-xl font-semibold">{classItem.name}</h1>
-                <p className="text-muted-foreground">Homeroom Teacher: {classItem.teacher?.name ?? '-'}</p>
-                {/* <p className="text-muted-foreground">Homeroom Teacher: {classItem.homeroom_teacher || '-'}</p> */}
+                {/* <p className="text-muted-foreground">Homeroom Teacher: {classItem.teacher?.name ?? '-'}</p> */}
+                <p className="text-muted-foreground">
+                    Teacher List: {classItem.teachers && classItem.teachers.length > 0 ? classItem.teachers.map((t) => t.name).join(', ') : '-'}
+                </p>
 
                 <form onSubmit={handleAssign} className="mt-6 flex items-center gap-2">
                     <select
