@@ -32,7 +32,7 @@ export function Combobox({
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button variant="outline" role="combobox" className="w-full justify-between">
-                    {selected ? selected.label : 'Pilih guru'}
+                    {selected ? selected.label : 'Pilih data'}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
@@ -40,7 +40,7 @@ export function Combobox({
                 <Command>
                     <CommandInput placeholder={inputPlaceholder} value={filterQuery} onValueChange={(val) => onInputChange?.(val)} />
                     <CommandList>
-                        <CommandEmpty>Guru tidak ditemukan.</CommandEmpty>
+                        <CommandEmpty>data tidak ditemukan.</CommandEmpty>
                         <CommandGroup>
                             {options.map((option) => (
                                 <CommandItem

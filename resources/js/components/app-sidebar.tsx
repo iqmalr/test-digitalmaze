@@ -43,6 +43,11 @@ const mainNavItems: NavItem[] = [
         href: '/summary',
         icon: School,
     },
+    {
+        title: 'Parent',
+        href: '/parent',
+        icon: School,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

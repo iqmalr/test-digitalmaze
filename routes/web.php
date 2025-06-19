@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\ClassesController;
 use App\Http\Controllers\Web\StudentByClassesController;
 use App\Http\Controllers\Web\StudentController;
+use App\Http\Controllers\Web\StudentParentController;
 use App\Http\Controllers\Web\SummaryController;
 use App\Http\Controllers\Web\TeacherByClassesController;
 use App\Http\Controllers\Web\TeacherController;
@@ -57,6 +58,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('/{class}/detail', [TeacherByClassesController::class, 'show'])->name('detail');
     Route::prefix('summary')->name('summary.')->group(function () {
         Route::get('/', [SummaryController::class, 'index'])->name('index');
+    });
+    Route::prefix('parents')->name('parents.')->group(function () {
+        Route::get('/', [StudentParentController::class, 'index'])->name('index');
+        Route::get('/create', [StudentParentController::class, 'create'])->name('create');
+        Route::post('/store', [StudentParentController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [StudentParentController::class, 'edit'])->name('edit');
+        Route::post('/{id}', [StudentParentController::class, 'update'])->name('update');
+        Route::delete('/{id}', [StudentParentController::class, 'destroy'])->name('destroy');
     });
 });
 
